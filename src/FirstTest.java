@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
 
@@ -16,19 +17,27 @@ public class FirstTest {
     @Before
     public void setUp() throws Exception {
 
-        // Получить путь к apk-файлу из файла config.properties
-        String configFilePath = "src/config.properties";
-        FileInputStream propertiesInput = new FileInputStream(configFilePath);
-
-        Properties properties = new Properties();
-        properties.load(propertiesInput);
-
-        String apk = properties.getProperty("APK_FILE");
-
+        String apk = getApkFilePath();
         DesiredCapabilities capabilities = getDesiredCapabilities(apk);
+
         driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
     }
 
+    /**
+     * Получить из конфига путь к apk-файлу тестируемого приложения
+     */
+    private static String getApkFilePath() throws IOException {
+        String configFilePath = "src/config.properties";
+        FileInputStream propertiesInput = new FileInputStream(configFilePath);
+        Properties properties = new Properties();
+        properties.load(propertiesInput);
+        String apk = properties.getProperty("APK_FILE");
+        return apk;
+    }
+
+    /**
+     * Установить параметры запуска тестов
+     */
     private static DesiredCapabilities getDesiredCapabilities(String apk) {
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
