@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Properties;
 import static org.junit.Assert.*;
 
@@ -60,6 +61,7 @@ public class ThirdModuleTest
                 5
         );
     }
+
 
     /**
      * 1. Скипнуть онбординг.
@@ -115,6 +117,56 @@ public class ThirdModuleTest
         ).size();
 
         assertEquals("The Search Results List is not empty", 0, number_of_elements);
+    }
+
+
+    /**
+     * 1. Скипнуть онбординг.
+     * 2. Тапнуть строку поиска.
+     * 3. Ввести слово.
+     * 4. Проверить, что искомое слово есть в каждом из результатов поиска.
+     */
+    @Test
+    public void testWordInSearchResults()
+    {
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "The Skip Button cannot be fund",
+                5
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_container"),
+                "The Search Bar Container cannot be found",
+                5
+        );
+
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Java",
+                "The Search Bar cannot be found",
+                5
+        );
+
+        waitForElementPresent(
+                By.id("org.wikipedia:id/search_results_list"),
+                "The Search Results element cannot be found",
+                10
+        );
+
+        List<WebElement> search_result_elements = driver.findElementsByXPath(
+                "//*[@resource-id='org.wikipedia:id/page_list_item_title']"
+        );
+
+        for (WebElement element : search_result_elements)
+        {
+            String text = element.getAttribute("text");
+            assertTrue(
+                    "The text '" + text + "' doesn't contain the word 'Java'",
+                    text.contains("Java")
+            );
+
+        }
     }
 
 
@@ -198,6 +250,7 @@ public class ThirdModuleTest
     {
         WebElement element = waitForElementPresent(locator, error_message, timeOutInSeconds);
         String actual_text = element.getAttribute("text");
+        System.out.println(actual_text);
         assertEquals(error_message, expected_text, actual_text);
     }
 }
