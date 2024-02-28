@@ -4,7 +4,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -74,15 +73,22 @@ public class FirstTest {
     @Test
     public void testSearch() {
 
-        String[] skip_n_search_xpath = {"//*[@text='Skip']", "//*[@text='Search Wikipedia']"};
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "The Skip Button cannot be fund",
+                5
+        );
 
-        for (String i : skip_n_search_xpath)
-            waitForElementAndClick(By.xpath(i), "Cannot find an element by xpath '" + i + "'", 5);
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_container"),
+                "The Search Bar Container cannot be found",
+                5
+        );
 
         waitForElementAndSendKeys(
                 By.xpath("//*[@text='Search Wikipedia']"),
                 "Java",
-                "The search input cannot be found",
+                "The search bar cannot be found",
                 5
         );
 
@@ -96,25 +102,51 @@ public class FirstTest {
     /**
      * 1. Скипнуть онбординг.
      * 2. Тапнуть строку поиска.
-     * 3. Тапнуть стрелку назад.
-     * 4. Проверить, что возврат состоялся – на экране нет кнопки смены языка.
+     * 3. Ввести текст в строку поиска.
+     * 4. Проверить, что текст введён.
+     * 5. Очистить строку поиска.
+     * 6. Проверить, что строка пуста.
+     * 7. Тапнуть стрелку назад.
+     * 8. Проверить, что возврат состоялся – на экране нет кнопки смены языка.
      */
     @Test
     public void testCancelSearch() {
-        String[] skip_n_search_id = {"org.wikipedia:id/fragment_onboarding_skip_button", "org.wikipedia:id/search_container"};
 
-        for (String i : skip_n_search_id)
-            waitForElementAndClick(By.id(i), "Cannot find an element by id '" + i + "'", 5);
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "The Skip Button cannot be fund",
+                5
+        );
+
+         waitForElementAndClick(
+                By.id("org.wikipedia:id/search_container"),
+                "The Search Bar Container cannot be found",
+                5
+        );
+
+        WebElement search_bar = waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Java",
+                "The Search Bar cannot be found",
+                5
+        );
+
+        String search_bar_text = search_bar.getAttribute("text");
+        Assert.assertEquals("The Search Bar Text is not equal 'Java'", "Java", search_bar_text);
+
+        search_bar.clear();
+        search_bar_text = search_bar.getAttribute("text");
+        Assert.assertEquals("The Search Bar Text is not empty", "Search Wikipedia", search_bar_text);
 
         waitForElementAndClick(
                 By.xpath("//*[@content-desc='Navigate up']"),
-                "The back arrow cannot be found",
+                "The Back Arrow cannot be found",
                 5
         );
 
         waitForElementNotPresent(
                 By.id("org.wikipedia:id/search_lang_button"),
-                "The lang button is still on the screen",
+                "The Lang Button is still on the screen",
                 5
         );
     }
@@ -129,15 +161,23 @@ public class FirstTest {
      */
     @Test
     public void testCompareArticleTitle() {
-        String[] skip_n_search_id = {"org.wikipedia:id/fragment_onboarding_skip_button", "org.wikipedia:id/search_container"};
 
-        for (String i : skip_n_search_id)
-            waitForElementAndClick(By.id(i), "Cannot find an element by id '" + i + "'", 5);
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "The Skip Button cannot be fund",
+                5
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_container"),
+                "The Search Bar Container cannot be found",
+                5
+        );
 
         waitForElementAndSendKeys(
                 By.xpath("//*[@text='Search Wikipedia']"),
                 "Java",
-                "The search input cannot be found",
+                "The Search Bar cannot be found",
                 5
         );
 
@@ -150,20 +190,20 @@ public class FirstTest {
         // Клик по заголовку, чтобы скрыть подсказку
         waitForElementAndClick(
                 By.xpath("//*[@content-desc='Java (programming language)']"),
-                "The title cannot be found",
+                "The Title cannot be found",
                 5
         );
 
         WebElement subtitle_element = waitForElementPresent(
                 By.id("pcs-edit-section-title-description"),
-                "The subtitle of the article 'Java' cannot be found by id",
+                "The Subtitle of the Article 'Java' cannot be found by id",
                 15
         );
 
-        String subtitle_text = subtitle_element.getAttribute("content-desc");
+        String subtitle_text = subtitle_element.getAttribute("contentDescription");  // OR "name", but NOT "content-desc"
 
         Assert.assertEquals(
-                "The text of the subtitle is not equal to 'Object-oriented programming language'",
+                "The Text of the Subtitle is not equal to 'Object-oriented programming language'",
                 "Object-oriented programming language",
                 subtitle_text
         );
@@ -191,30 +231,40 @@ public class FirstTest {
 
     /**
      * Найти элемент и кликнуть по нему
-     * @param error_message – сообщение об ошибке
-     * @param timeoutInSeconds – таймаут ожидания в секундах
+     *
+     * @return
      */
-    private void waitForElementAndClick(By locator, String error_message, long timeoutInSeconds) {
+    private WebElement waitForElementAndClick(By locator, String error_message, long timeoutInSeconds) {
         WebElement element = waitForElementPresent(locator, error_message, timeoutInSeconds);
         element.click();
+        return element;
     }
 
     /**
      * Найти элемент и отправить ему какое-то значение
+     *
      * @param value – значение, которое нужно отправить элементу
-     * @param error_message – сообщение об ошибке
-     * @param timeoutInSeconds – таймаут ожидания в секундах
+     * @return
      */
-    private void waitForElementAndSendKeys(By locator, String value, String error_message, long timeoutInSeconds) {
+    private WebElement waitForElementAndSendKeys(By locator, String value, String error_message, long timeoutInSeconds) {
         WebElement element = waitForElementPresent(locator, error_message, timeoutInSeconds);
         element.sendKeys(value);
+        return element;
+    }
+
+    /**
+     * Найти элемент и очистить его
+     *
+     * @return
+     */
+    private WebElement waitForElementAndClear(By locator, String error_message, long timeoutInSeconds) {
+        WebElement element = waitForElementPresent(locator, error_message, timeoutInSeconds);
+        element.clear();
+        return element;
     }
 
     /**
      * Проверить с явным ожиданием, что элемента нет на экране
-     *
-     * @param error_message    – сообщение об ошибке
-     * @param timeoutInSeconds – таймаут ожидания в секундах
      */
     private void waitForElementNotPresent(By locator, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
