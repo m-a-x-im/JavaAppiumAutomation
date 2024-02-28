@@ -13,8 +13,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
-
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class ThirdModuleTest
 {
@@ -37,7 +36,7 @@ public class ThirdModuleTest
     /**
      * 1. Скипнуть онбординг.
      * 2. Тапнуть строку поиска.
-     * 3. Проверить, что в ней есть плейсхолдер "Search Wikipedia"
+     * 3. Проверить, что в ней есть плейсхолдер "Search Wikipedia".
      */
     @Test
     public void testSearchBarText()
@@ -45,18 +44,77 @@ public class ThirdModuleTest
         waitForElementAndClick(
                 By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
                 "The Skip Button cannot be fund",
-                5);
+                5
+        );
 
         waitForElementAndClick(
                 By.id("org.wikipedia:id/search_container"),
                 "The Search Bar Container cannot be found",
-                5);
+                5
+        );
 
         assertElementHasText(
                 By.id("org.wikipedia:id/search_src_text"),
                 "The Search Bar Text is not equal to 'Search Wikipedia'",
                 "Search Wikipedia",
-                5);
+                5
+        );
+    }
+
+    /**
+     * 1. Скипнуть онбординг.
+     * 2. Тапнуть строку поиска.
+     * 3. Ввести текст (слово).
+     * 4. Проверить, что в результатах поиска больше одного элемента.
+     * 5. Отменить поиск.
+     * 6. Проверить, что результаты поиска пусты.
+     */
+    @Test
+    public void testSearchResults()
+    {
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "The Skip Button cannot be fund",
+                5
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_container"),
+                "The Search Bar Container cannot be found",
+                5
+        );
+
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Java",
+                "The Search Bar cannot be found",
+                10
+        );
+
+        waitForElementPresent(
+                By.id("org.wikipedia:id/search_results_list"),
+                "The Search Results element cannot be found",
+                10
+        );
+
+        // Количество элементов в результатах поиска
+        int number_of_elements = driver.findElementsByXPath(
+                "//*[@resource-id='org.wikipedia:id/search_results_list']/descendant::android.view.ViewGroup"
+        ).size();
+
+        assertTrue("There is no more than one item in the Search Results List", number_of_elements > 1);
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_close_btn"),
+                "The Close Button cannot be found",
+                5
+        );
+
+        number_of_elements = driver.findElementsByXPath(
+                "//*[@resource-id='org.wikipedia:id/search_results_list']/descendant::android.view.ViewGroup"
+        ).size();
+
+        assertEquals("The Search Results List is not empty", 0, number_of_elements);
     }
 
 
@@ -104,7 +162,6 @@ public class ThirdModuleTest
         return wait.until(ExpectedConditions.presenceOfElementLocated(locator));
     }
 
-
     /**
      * Найти элемент и кликнуть по нему
      * @param locator – локатор (XPath || id etc.)
@@ -117,6 +174,18 @@ public class ThirdModuleTest
         element.click();
     }
 
+    /**
+     * Найти элемент и отправить ему значение
+     * @param locator – локатор (XPath || id etc.)
+     * @param value – отправляемое значение
+     * @param error_message – сообщение об ошибке
+     * @param timeOutInSeconds – время ожидания в секундах
+     */
+    private void waitForElementAndSendKeys(By locator, String value, String error_message, long timeOutInSeconds)
+    {
+        WebElement element = waitForElementPresent(locator, error_message, timeOutInSeconds);
+        element.sendKeys(value);
+    }
 
     /**
      * Проверить наличие определённого текста у элемента
