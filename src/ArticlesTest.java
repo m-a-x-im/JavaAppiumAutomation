@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.ScreenOrientation;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -47,7 +48,10 @@ public class ArticlesTest
     }
 
     @After
-    public void tearDown() { driver.quit(); }
+    public void tearDown() {
+        driver.rotate(ScreenOrientation.PORTRAIT);
+        driver.quit();
+    }
 
 
     /**
@@ -240,6 +244,77 @@ public class ArticlesTest
 
         searchArticleAndOpen(query, By.xpath(article_xpath));
         assertElementPresent(By.xpath(article_title_xpath), query);
+    }
+
+
+    /**
+     * 1. Скипнуть онбординг.
+     * 2. Найти и открыть статью.
+     * 3. Найти подзаголовок.
+     * 4. Развернуть экран в landscape.
+     * 5. Найти подзаголовок и сравнить с предыдущим.
+     * 6. Вернуть экран в portrait.
+     * 7. Снова сравнить подзаголовок с первоначальным.
+     */
+    @Test
+    public void testArticleSubtitleAfterRotation()
+    {
+        String query = "Java";
+        String article_xpath = "//*[@resource-id='org.wikipedia:id/page_list_item_title'][@text='" + query + "']";
+        String subtitle_id = "pcs-edit-section-title-description";
+        String attribute = "name";  // content-desc
+
+        waitForElementAndClick(
+                By.id(skip_id),
+                "The Skip Button cannot be fund using '" + skip_id + "'",
+                5
+        );
+
+        waitForElementAndClick(
+                By.id(search_container_id),
+                "The Search Bar Container cannot be found using '" + search_container_id + "'",
+                5
+        );
+
+        searchArticleAndOpen(query, By.xpath(article_xpath));
+
+        // Subtitle
+        String subtitle_before_rotation = waitForElementAndGetAttribute(
+                By.id(subtitle_id),
+                attribute,
+                "The Subtitle of Article cannot be found using '" + subtitle_id + "'",
+                10
+        );
+
+        driver.rotate(ScreenOrientation.LANDSCAPE);
+
+        String subtitle_after_rotation = waitForElementAndGetAttribute(
+                By.id(subtitle_id),
+                attribute,
+                "The Subtitle of Article cannot be found using '" + subtitle_id + "'",
+                10
+        );
+
+        Assert.assertEquals(
+                "The Subtitle of Article changed after the screen rotation was changed to landscape",
+                subtitle_before_rotation,
+                subtitle_after_rotation
+        );
+
+        driver.rotate(ScreenOrientation.PORTRAIT);
+
+        String subtitle_after_second_rotation = waitForElementAndGetAttribute(
+                By.id(subtitle_id),
+                attribute,
+                "The Subtitle of Article cannot be found using '" + subtitle_id + "'",
+                10
+        );
+
+        Assert.assertEquals(
+                "The Subtitle of Article changed after the screen rotation was changed to portrait",
+                subtitle_before_rotation,
+                subtitle_after_second_rotation
+        );
     }
 
 
