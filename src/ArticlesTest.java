@@ -10,11 +10,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
+import org.openqa.selenium.NoSuchElementException;
 import java.net.URL;
 import java.util.List;
 
-public class SaveTwoArticlesTest
+public class ArticlesTest
 {
     private AppiumDriver driver;
 
@@ -52,19 +52,12 @@ public class SaveTwoArticlesTest
 
     /**
      * 1. Скипнуть онбординг.
-     * 2. Тапнуть строку поиска.
-     * 3. Ввести поисковый запрос.
-     * 4. Открыть статью.
-     * 5. Тапнуть таб "Save".
-     * 6. В снэкбаре тапнуть кнопку "Add to list".
-     * 7. Ввести имя списка.
-     * 8. Тапнуть кнопку "OK".
-     * 9. Очистить строку поиска.
-     * 10. Ввести новый поисковый запрос.
-     * 11. Открыть статью.
-     * 12. Тапнуть таб "Save".
-     * 13. Выбрать ранее добавленный список.
-     *
+     * 2. Найти статью и добавить её в новый список.
+     * 3. Найти ещё одну статью и добавить её в этот же список.
+     * 4. Открыть список.
+     * 5. Удалить первую статью.
+     * 6. Открыть вторую статью.
+     * 7. Проверить, что заголовок соответствует ожидаемому.
      */
     @Test
     public void testSaveTwoArticles()
@@ -222,6 +215,35 @@ public class SaveTwoArticlesTest
 
 
     /**
+     * 1. Скипнуть онбординг.
+     * 2. Найти и открыть статью.
+     * 3. Сразу проверить, есть ли на экране элемент title.
+     */
+    @Test
+    public void testArticleTitle()
+    {
+        String query = "System of a Down";
+        String article_xpath = "//*[@resource-id='org.wikipedia:id/page_list_item_title'][@text='" + query + "']";
+        String article_title_xpath = "//android.webkit.WebView[@content-desc='System of a Down']/android.view.View[1]/android.view.View[1]";
+
+        waitForElementAndClick(
+                By.id(skip_id),
+                "The Skip Button cannot be fund using '" + skip_id + "'",
+                5
+        );
+
+        waitForElementAndClick(
+                By.id(search_container_id),
+                "The Search Bar Container cannot be found using '" + search_container_id + "'",
+                5
+        );
+
+        searchArticleAndOpen(query, By.xpath(article_xpath));
+        assertElementPresent(By.xpath(article_title_xpath), query);
+    }
+
+
+    /**
      * Найти элемент (с явным ожиданием)
      * @param locator – локатор
      * @param error_message – сообщение об ошибке
@@ -304,13 +326,12 @@ public class SaveTwoArticlesTest
     }
 
     /**
-     * Найти статью и начать сохранение (тапнуть иконку добавления) в список
+     * Найти статью и открыть
      * @param query – поисковый запрос
      * @param article_locator – локатор статьи в результатах поиска
      */
-    private void searchArticleAndClickAddButton(String query, By article_locator)
+    private void searchArticleAndOpen(String query, By article_locator)
     {
-
         // Search
         waitForElementAndSendKeys(
                 By.id(search_input_id),
@@ -325,6 +346,16 @@ public class SaveTwoArticlesTest
                 "The Article cannot be found using '" + article_locator + "'",
                 10
         );
+    }
+
+    /**
+     * Найти статью и начать сохранение (тапнуть иконку добавления) в список
+     * @param query – поисковый запрос
+     * @param article_locator – локатор статьи в результатах поиска
+     */
+    private void searchArticleAndClickAddButton(String query, By article_locator)
+    {
+        searchArticleAndOpen(query, article_locator);
 
         // Save Tab
         waitForElementAndClick(
@@ -391,5 +422,25 @@ public class SaveTwoArticlesTest
     {
         WebElement element = waitForElementPresent(locator, error_message, timeOutInSeconds);
         return element.getAttribute(attribute);
+    }
+
+    /**
+     * Проверить, что у статьи есть соответствующий заголовок
+     * @param locator – локатор элемента с заголовком
+     * @param title – ожидаемый заголовок
+     */
+    private void assertElementPresent(By locator, String title)
+    {
+        try {
+            WebElement element = driver.findElement(locator);
+            String attribute = element.getAttribute("name");
+
+            Assert.assertEquals(
+                    "The Attribute Value is not equal to '" + title + "'",
+                    title, attribute);
+
+        } catch (NoSuchElementException e)  {
+            throw new AssertionError("The Title cannot be found using '" + locator + "'");
+        }
     }
 }
