@@ -122,10 +122,11 @@ public class SaveTwoArticlesTest
         searchArticleAndClickAddButton(first_query, By.xpath(first_article_xpath));
 
         // Bottom sheet
-        waiForElementAndClickIfExists(
+        waitForElementAndClickIfExists(
                 By.id(bottom_sheet_id),
                 By.id(close_button_id),
-                5);
+                5
+        );
 
         // Name of the List
         waitForElementAndSendKeys(
@@ -266,7 +267,7 @@ public class SaveTwoArticlesTest
      * @param close_locator – локатор зоны вне шторки
      * @param timeOutInSeconds – время ожидания в секундах
      */
-    private void waiForElementAndClickIfExists(By bottom_sheet_locator, By close_locator, long timeOutInSeconds)
+    private void waitForElementAndClickIfExists(By bottom_sheet_locator, By close_locator, long timeOutInSeconds)
     {
         if (!driver.findElements(bottom_sheet_locator).isEmpty()) {
             waitForElementAndClick(close_locator, "", timeOutInSeconds);
@@ -379,7 +380,7 @@ public class SaveTwoArticlesTest
     }
 
     /**
-     * Подождать появление элемента и получить значение его атрибута
+     * Подождать появления элемента и получить значение его атрибута
      * @param locator – локатор
      * @param attribute – название атрибута
      * @param error_message – сообщение об ошибке
