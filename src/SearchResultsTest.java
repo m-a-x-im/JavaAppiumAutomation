@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Properties;
 import static org.junit.Assert.*;
 
-public class ThirdModuleTest
+public class SearchResultsTest
 {
     private AppiumDriver driver;
 
@@ -165,7 +165,6 @@ public class ThirdModuleTest
                     "The text '" + text + "' doesn't contain the word 'Java'",
                     text.contains("Java")
             );
-
         }
     }
 
@@ -250,7 +249,6 @@ public class ThirdModuleTest
     {
         WebElement element = waitForElementPresent(locator, error_message, timeOutInSeconds);
         String actual_text = element.getAttribute("text");
-        System.out.println(actual_text);
         assertEquals(error_message, expected_text, actual_text);
     }
 }

@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
 
-public class FirstTest {
+public class SearchBarTest {
 
     private AppiumDriver driver;
 
@@ -48,7 +48,6 @@ public class FirstTest {
      */
     private static DesiredCapabilities getDesiredCapabilities(String apk) {
         DesiredCapabilities capabilities = new DesiredCapabilities();
-
         capabilities.setCapability("platformName", "Android");
         capabilities.setCapability("deviceName", "AndroidTestDevice");
         capabilities.setCapability("platformVersion", "8.0");
