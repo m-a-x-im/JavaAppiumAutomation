@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Методы поиска в приложении
@@ -24,6 +25,8 @@ public class SearchPageObject extends MainPageObject {
             SEARCH_RESULTS_LIST_ID = "org.wikipedia:id/search_results_list",
             SEARCH_RESULT_WITH_DESCRIPTION_XPATH_TEMPLATE = "//*[@resource-id='org.wikipedia:id" +
                     "/page_list_item_description'][@text='{DESCRIPTION}']",
+            SEARCH_RESULT_WITH_TITLE_AND_DESCRIPTION_XPATH_TEMPLATE = "//android.view.ViewGroup[android.widget.TextView" +
+            "[contains(@text, '{TITLE}')] and android.widget.TextView[@text='{DESCRIPTION}']]",
             SEARCH_ARTICLE_TITLE_XPATH = "//*[@resource-id='org.wikipedia:id/page_list_item_title']",
             LABEL_OF_EMPTY_SEARCH_RESULTS_XPATH = "//*[@resource-id='org.wikipedia:id/results_text'][@text='No results']",
             ARTICLE_TOOLBAR_SEARCH_LINE_ID = "org.wikipedia:id/page_toolbar_button_search";
@@ -41,6 +44,21 @@ public class SearchPageObject extends MainPageObject {
                 "{DESCRIPTION}",
                 article_description
         );
+    }
+
+    /**
+     * Получить xpath статьи в результатах поиска, подставив в шаблон две подстроки – заголовок и описание статьи
+     * @param article_title – заголовок
+     * @param article_description – описание
+     * @return String, xpath
+     */
+    private static String getSearchResultWithTitleAndDescriptionXpath(String article_title, String article_description)
+    {
+        String xpath_with_title = SEARCH_RESULT_WITH_TITLE_AND_DESCRIPTION_XPATH_TEMPLATE.replace(
+                "{TITLE}",
+                article_title
+        );
+        return xpath_with_title.replace("{DESCRIPTION}", article_description);
     }
     /* TEMPLATE METHODS */
 
@@ -222,6 +240,23 @@ public class SearchPageObject extends MainPageObject {
                 By.id(SEARCH_INPUT_ID),
                 query,
                 "The Search Line cannot be found using '" + SEARCH_INPUT_ID + "'",
+                5
+        );
+    }
+
+    /**
+     * Подождать появления статьи в результатах поиска с определённым заголовком и описанием
+     * @param title – заголовок статьи
+     * @param description – описание статьи
+     */
+    public void waitForSearchResultWithTitleAndDescription(String title, String description)
+    {
+        String search_result_xpath = getSearchResultWithTitleAndDescriptionXpath(title, description);
+
+        this.waitForElementPresent(
+                By.xpath(search_result_xpath),
+                "The Article with title '" + title + "' and description '" + description + "' cannot be " +
+                        "found using '" + search_result_xpath + "'",
                 5
         );
     }

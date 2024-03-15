@@ -6,6 +6,7 @@ import lib.ui.NavigationUI;
 import lib.ui.SearchPageObject;
 import org.openqa.selenium.WebElement;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class SearchTests extends CoreTestCase {
@@ -203,5 +204,43 @@ public class SearchTests extends CoreTestCase {
 
         int size_of_search_results_list = searchPageObject.getSearchResultsList().size();
         assertEquals("The Search Results List is not empty", 0, size_of_search_results_list);
+    }
+
+    /**
+     * 1. Скипнуть онбординг и тапнуть строку поиска.
+     * 2. Ввести поисковый запрос, на который вернётся минимум 3 результата.
+     * 3. Проверить, что 3 результата содержат ожидаемый заголовок и описание.
+     */
+    public void testSearchByTitleAndDescription()
+    {
+        String query = "Jav", title = "Java";
+        String[] descriptions = {
+                "Object-oriented programming language",
+                "High-level programming language",
+                "List of versions of the Java programming language"
+        };
+
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine(query);
+
+        String[] not_found = new String[3];
+        int count = 0;
+
+        for (String description : descriptions) {
+            try {
+                searchPageObject.waitForSearchResultWithTitleAndDescription(title, description);
+            } catch (Exception e) {
+                not_found[count] = description;
+            }
+            ++count;
+        }
+
+        String[] empty_array = new String[3];
+        assertEquals(
+                String.format("\nNot found:\n%s", Arrays.toString(not_found)),
+                Arrays.toString(empty_array),
+                Arrays.toString(not_found)
+        );
     }
 }
