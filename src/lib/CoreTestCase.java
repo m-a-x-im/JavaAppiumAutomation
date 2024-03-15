@@ -31,12 +31,13 @@ public class CoreTestCase extends TestCase {
     {
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("platformName", "Android");
-        capabilities.setCapability("deviceName", "AndroidTestDevice");
-        capabilities.setCapability("platformVersion", "14");
-        capabilities.setCapability("automationName", "UiAutomator2");
-        capabilities.setCapability("appPackage", "org.wikipedia");
-        capabilities.setCapability("appActivity", ".main.MainActivity");
-        capabilities.setCapability("app", "/Users/maxim/git/m-a-x-im/OldJavaAppiumAutomation/apk_files/org.wikipedia.apk");
+        capabilities.setCapability("appium:deviceName", "AndroidTestDevice");
+        capabilities.setCapability("appium:platformVersion", "14");
+        capabilities.setCapability("appium:automationName", "UiAutomator2");
+        capabilities.setCapability("appium:appPackage", "org.wikipedia");
+        capabilities.setCapability("appium:appActivity", ".main.MainActivity");
+        capabilities.setCapability("appium:app", "/Users/maxim/git/m-a-x-im/" +
+                "OldJavaAppiumAutomation/apk_files/org.wikipedia.apk");
         return capabilities;
     }
 
