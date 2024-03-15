@@ -8,7 +8,7 @@ public class ChangeAppConditionTests extends CoreTestCase {
 
     private static final String
             DEFAULT_QUERY = "Java",
-            DEFAULT_ARTICLE_SUBTITLE = "Object-oriented programming language";
+            DEFAULT_ARTICLE_DESCRIPTION = "Object-oriented programming language";
 
 
     /**
@@ -21,18 +21,18 @@ public class ChangeAppConditionTests extends CoreTestCase {
      * 7. Развернуть экран в portrait.
      * 8. Снова сравнить заголовок с первоначальным.
      */
-    public void testArticleSubtitleAfterRotation()
+    public void testArticleTitleAfterRotation()
     {
         String
                 query = "System of a Down",
-                subtitle = "American metal band";
+                article_description = "American metal band";
 
         SearchPageObject searchPageObject = new SearchPageObject(driver);
         ArticlePageObject articlePageObject = new ArticlePageObject(driver);
 
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(query);
-        searchPageObject.openArticleWithSubtitle(subtitle);
+        searchPageObject.openArticleWithDescription(article_description);
 
         String title_before_rotation = articlePageObject.getArticleTitleText();
 
@@ -56,7 +56,7 @@ public class ChangeAppConditionTests extends CoreTestCase {
     /**
      * 1. Скипнуть онбординг и тапнуть строку поиска.
      * 2. Ввести поисковый запрос.
-     * 3. Проверить, что в результатах поиска есть статья с определённым подзаголовком.
+     * 3. Проверить, что в результатах поиска есть статья с определённым описанием.
      * 4. Свернуть МП на 2 секунды.
      * 5. Проверить, что в результатах поиска по-прежнему отображается та же статья.
      */
@@ -66,10 +66,10 @@ public class ChangeAppConditionTests extends CoreTestCase {
 
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(DEFAULT_QUERY);
-        searchPageObject.waitForSearchResultWithSubtitle(DEFAULT_ARTICLE_SUBTITLE);
+        searchPageObject.waitForSearchResultWithDescription(DEFAULT_ARTICLE_DESCRIPTION);
 
         this.sendAppToBackground(2);
 
-        searchPageObject.waitForSearchResultWithSubtitle(DEFAULT_ARTICLE_SUBTITLE);
+        searchPageObject.waitForSearchResultWithDescription(DEFAULT_ARTICLE_DESCRIPTION);
     }
 }

@@ -12,7 +12,7 @@ public class SearchTests extends CoreTestCase {
 
     private static final String
             DEFAULT_QUERY = "Java",
-            DEFAULT_ARTICLE_SUBTITLE = "Object-oriented programming language";
+            DEFAULT_ARTICLE_DESCRIPTION = "Object-oriented programming language";
 
     /**
      * 1. Скипнуть онбординг и тапнуть строку поиска.
@@ -25,7 +25,7 @@ public class SearchTests extends CoreTestCase {
 
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(DEFAULT_QUERY);
-        searchPageObject.openArticleWithSubtitle(DEFAULT_ARTICLE_SUBTITLE);
+        searchPageObject.openArticleWithDescription(DEFAULT_ARTICLE_DESCRIPTION);
     }
 
     /**
@@ -187,7 +187,7 @@ public class SearchTests extends CoreTestCase {
 
     /**
      * 1. Скипнуть онбординг и тапнуть строку поиска.
-     * 2. Ввести поисковой запрос, на который вернётся пустой список.
+     * 2. Ввести поисковый запрос, на который вернётся пустой список.
      * 3. Проверить, что есть плейсхолдер пустого списка.
      * 4. Проверить, что список с результатами пустой.
      */
@@ -204,5 +204,4 @@ public class SearchTests extends CoreTestCase {
         int size_of_search_results_list = searchPageObject.getSearchResultsList().size();
         assertEquals("The Search Results List is not empty", 0, size_of_search_results_list);
     }
-
 }

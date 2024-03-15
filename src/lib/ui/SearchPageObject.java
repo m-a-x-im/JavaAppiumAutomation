@@ -22,7 +22,8 @@ public class SearchPageObject extends MainPageObject {
             SEARCH_INPUT_ID = "org.wikipedia:id/search_src_text",
             SEARCH_CANCEL_ID = "org.wikipedia:id/search_close_btn",
             SEARCH_RESULTS_LIST_ID = "org.wikipedia:id/search_results_list",
-            SEARCH_RESULT_XPATH_TEMPLATE = "//*[@resource-id='org.wikipedia:id/page_list_item_description'][@text='{SUBSTRING}']",
+            SEARCH_RESULT_WITH_DESCRIPTION_XPATH_TEMPLATE = "//*[@resource-id='org.wikipedia:id" +
+                    "/page_list_item_description'][@text='{DESCRIPTION}']",
             SEARCH_ARTICLE_TITLE_XPATH = "//*[@resource-id='org.wikipedia:id/page_list_item_title']",
             LABEL_OF_EMPTY_SEARCH_RESULTS_XPATH = "//*[@resource-id='org.wikipedia:id/results_text'][@text='No results']",
             ARTICLE_TOOLBAR_SEARCH_LINE_ID = "org.wikipedia:id/page_toolbar_button_search";
@@ -30,13 +31,16 @@ public class SearchPageObject extends MainPageObject {
 
     /* TEMPLATE METHODS */
     /**
-     * Получить xpath заголовка статьи в результатах поиска, подставив подстроку в шаблон
-     * @param substring – подстрока, которую нужно подставить в xpath; подзаголовок статьи в результатах поиска
-     * @return xpath искомого заголовка статьи
+     * Получить xpath статьи в результатах поиска, подставив в шаблон подстроку – описание статьи
+     * @param article_description – описание (подзаголовок) статьи в результатах поиска
+     * @return String, xpath
      */
-    private static String getSearchResultXpath(String substring)
+    private static String getSearchResultWithDescriptionXpath(String article_description)
     {
-        return SEARCH_RESULT_XPATH_TEMPLATE.replace("{SUBSTRING}", substring);
+        return SEARCH_RESULT_WITH_DESCRIPTION_XPATH_TEMPLATE.replace(
+                "{DESCRIPTION}",
+                article_description
+        );
     }
     /* TEMPLATE METHODS */
 
@@ -124,14 +128,29 @@ public class SearchPageObject extends MainPageObject {
     }
 
     /**
-     * Подождать появления статьи в результатах поиска
-     * @param article_subtitle – подзаголовок статьи
+     * Подождать появления статьи с определённым описанием (подзаголовком) в результатах поиска
+     * @param description – описание статьи
      */
-    public void waitForSearchResultWithSubtitle(String article_subtitle)
+    public void waitForSearchResultWithDescription(String description)
     {
-        String search_result_xpath = getSearchResultXpath(article_subtitle);
+        String search_result_xpath = getSearchResultWithDescriptionXpath(description);
 
         this.waitForElementPresent(
+                By.xpath(search_result_xpath),
+                "The Search Result cannot be found using '" + search_result_xpath + "'",
+                10
+        );
+    }
+
+    /**
+     * Открыть статью с определённым описанием (подзаголовком) из результатов поиска
+     * @param description – описание статьи
+     */
+    public void openArticleWithDescription(String description)
+    {
+        String search_result_xpath = getSearchResultWithDescriptionXpath(description);
+
+        this.waitForElementAndClick(
                 By.xpath(search_result_xpath),
                 "The Search Result cannot be found using '" + search_result_xpath + "'",
                 10
@@ -185,21 +204,6 @@ public class SearchPageObject extends MainPageObject {
                 "text",
                 "The Search Bar cannot be found using '" + SEARCH_INPUT_ID + "'",
                 5
-        );
-    }
-
-    /**
-     * Найти по заголовку и открыть статью из результатов поиска
-     * @param article_subtitle – заголовок статьи
-     */
-    public void openArticleWithSubtitle(String article_subtitle)
-    {
-        String search_result_xpath = getSearchResultXpath(article_subtitle);
-
-        this.waitForElementAndClick(
-                By.xpath(search_result_xpath),
-                "The Search Result cannot be found using '" + search_result_xpath + "'",
-                10
         );
     }
 

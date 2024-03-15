@@ -11,7 +11,7 @@ public class SavedListTests extends CoreTestCase {
     private static final String
             DEFAULT_QUERY = "Java",
             DEFAULT_ARTICLE_TITLE = "Java (programming language)",
-            DEFAULT_ARTICLE_SUBTITLE = "Object-oriented programming language",
+            DEFAULT_ARTICLE_DESCRIPTION = "Object-oriented programming language",
             DEFAULT_LIST_NAME = "Java Appium Automation";
 
 
@@ -36,7 +36,7 @@ public class SavedListTests extends CoreTestCase {
 
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(DEFAULT_QUERY);
-        searchPageObject.openArticleWithSubtitle(DEFAULT_ARTICLE_SUBTITLE);
+        searchPageObject.openArticleWithDescription(DEFAULT_ARTICLE_DESCRIPTION);
 
         articlePageObject.initSavingArticle();
         articlePageObject.saveArticleToNewList(list_name);
@@ -64,7 +64,7 @@ public class SavedListTests extends CoreTestCase {
     {
         String
                 second_query = "Appium",
-                second_subtitle = "Automation for Apps";
+                second_article_description = "Automation for Apps";
 
         SearchPageObject searchPageObject = new SearchPageObject(driver);
         ArticlePageObject articlePageObject = new ArticlePageObject(driver);
@@ -74,13 +74,13 @@ public class SavedListTests extends CoreTestCase {
         // Сохранение первой статьи в новый список
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(DEFAULT_QUERY);
-        searchPageObject.openArticleWithSubtitle(DEFAULT_ARTICLE_SUBTITLE);
+        searchPageObject.openArticleWithDescription(DEFAULT_ARTICLE_DESCRIPTION);
         articlePageObject.initSavingArticle();
         articlePageObject.saveArticleToNewList(DEFAULT_LIST_NAME);
 
         // Сохранение второй статьи в тот же список
         searchPageObject.typeArticleToolbarSearchLine(second_query);
-        searchPageObject.openArticleWithSubtitle(second_subtitle);
+        searchPageObject.openArticleWithDescription(second_article_description);
         String article_title_before_saving = articlePageObject.getArticleTitleText();
         articlePageObject.initSavingArticle();
         articlePageObject.saveArticleToExistingList(DEFAULT_LIST_NAME);
@@ -106,7 +106,7 @@ public class SavedListTests extends CoreTestCase {
                 "The Article '" + article_title_before_saving + "' not in the list '" + DEFAULT_LIST_NAME + "'",
                 is_second_article_in_list);
 
-        searchPageObject.openArticleWithSubtitle(second_subtitle);
+        searchPageObject.openArticleWithDescription(second_article_description);
 
         String article_title_after_saving = articlePageObject.getArticleTitleText();
         assertEquals(

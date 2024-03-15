@@ -9,7 +9,7 @@ public class ArticleTests extends CoreTestCase {
     private static final String
             DEFAULT_QUERY = "Java",
             DEFAULT_ARTICLE_TITLE = "Java (programming language)",
-            DEFAULT_ARTICLE_SUBTITLE = "Object-oriented programming language";
+            DEFAULT_ARTICLE_DESCRIPTION = "Object-oriented programming language";
 
 
     /**
@@ -19,20 +19,20 @@ public class ArticleTests extends CoreTestCase {
      * 4. Найти текст этого подзаголовка на странице.
      * 5. Проверить, что текст совпадает с подзаголовком из результатов поиска.
      */
-    public void testCompareArticleSubtitle()
+    public void testCompareArticleDescription()
     {
         SearchPageObject searchPageObject = new SearchPageObject(driver);
         ArticlePageObject articlePageObject = new ArticlePageObject(driver);
 
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(DEFAULT_QUERY);
-        searchPageObject.openArticleWithSubtitle(DEFAULT_ARTICLE_SUBTITLE);
+        searchPageObject.openArticleWithDescription(DEFAULT_ARTICLE_DESCRIPTION);
 
         String subtitle_text = articlePageObject.getArticleSubtitleText();
 
         assertEquals(
-                "The Text of the Subtitle is not equal to '" + DEFAULT_ARTICLE_SUBTITLE + "'",
-                DEFAULT_ARTICLE_SUBTITLE,
+                "The Text of the Subtitle is not equal to '" + DEFAULT_ARTICLE_DESCRIPTION + "'",
+                DEFAULT_ARTICLE_DESCRIPTION,
                 subtitle_text
         );
     }
@@ -55,7 +55,7 @@ public class ArticleTests extends CoreTestCase {
 
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(query);
-        searchPageObject.openArticleWithSubtitle(article_subtitle);
+        searchPageObject.openArticleWithDescription(article_subtitle);
         articlePageObject.waitSubtitleOfArticle();
         articlePageObject.scrollToFooter();
     }
@@ -73,11 +73,11 @@ public class ArticleTests extends CoreTestCase {
 
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(DEFAULT_QUERY);
-        searchPageObject.openArticleWithSubtitle(DEFAULT_ARTICLE_SUBTITLE);
+        searchPageObject.openArticleWithDescription(DEFAULT_ARTICLE_DESCRIPTION);
         String title = articlePageObject.getTitleIfExist();
 
         assertEquals(
-                "The Actual Title is not equal to '" + DEFAULT_ARTICLE_SUBTITLE + "'",
+                "The Actual Title is not equal to '" + DEFAULT_ARTICLE_DESCRIPTION + "'",
                 DEFAULT_ARTICLE_TITLE,
                 title
         );
