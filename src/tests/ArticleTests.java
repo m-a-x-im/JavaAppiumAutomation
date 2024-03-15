@@ -3,7 +3,6 @@ package tests;
 import lib.CoreTestCase;
 import lib.ui.ArticlePageObject;
 import lib.ui.SearchPageObject;
-import org.junit.Assert;
 
 public class ArticleTests extends CoreTestCase {
 
@@ -77,7 +76,7 @@ public class ArticleTests extends CoreTestCase {
         searchPageObject.openArticleWithSubtitle(DEFAULT_ARTICLE_SUBTITLE);
         String title = articlePageObject.getTitleIfExist();
 
-        Assert.assertEquals(
+        assertEquals(
                 "The Actual Title is not equal to '" + DEFAULT_ARTICLE_SUBTITLE + "'",
                 DEFAULT_ARTICLE_TITLE,
                 title
