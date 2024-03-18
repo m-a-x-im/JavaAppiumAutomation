@@ -28,7 +28,7 @@ public class ArticleTests extends CoreTestCase {
         searchPageObject.typeSearchLine(DEFAULT_QUERY);
         searchPageObject.openArticleWithDescription(DEFAULT_ARTICLE_DESCRIPTION);
 
-        String subtitle_text = articlePageObject.getArticleSubtitleText();
+        String subtitle_text = articlePageObject.getArticleDescriptionText();
 
         assertEquals(
                 "The Text of the Subtitle is not equal to '" + DEFAULT_ARTICLE_DESCRIPTION + "'",

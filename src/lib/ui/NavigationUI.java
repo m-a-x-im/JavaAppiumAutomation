@@ -15,17 +15,16 @@ public class NavigationUI extends MainPageObject {
 
 
     private static final String
-            BACK_ARROW_XPATH = "//android.widget.ImageButton[@content-desc='Navigate up']",
-            SAVED_TAB_ID = "org.wikipedia:id/nav_tab_reading_lists";
+            BACK_ARROW_XPATH = "xpath://android.widget.ImageButton[@content-desc='Navigate up']",
+            SAVED_TAB_ID = "id:org.wikipedia:id/nav_tab_reading_lists";
 
 
     /**
      * Тапнуть стрелку "назад"
      */
-    public void clickBackArrow()
-    {
+    public void clickBackArrow() {
         this.waitForElementAndClick(
-            By.xpath(BACK_ARROW_XPATH),
+            BACK_ARROW_XPATH,
             "The Back Arrow cannot be found using '" + BACK_ARROW_XPATH + "'",
             5
         );
@@ -34,9 +33,8 @@ public class NavigationUI extends MainPageObject {
     /**
      * Открыть экран со списками сохранённых статей
      */
-    public void openSavedListsView()
-    {
-        this.waitForElementAndClick(By.id(SAVED_TAB_ID),
+    public void openSavedListsView() {
+        this.waitForElementAndClick(SAVED_TAB_ID,
             "The tab 'Saved' cannot be found using '" + SAVED_TAB_ID + "'",
             5
         );

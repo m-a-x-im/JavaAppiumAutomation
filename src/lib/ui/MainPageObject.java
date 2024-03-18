@@ -12,26 +12,27 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 
 
 public class MainPageObject {
 
     protected AppiumDriver driver;
 
-    public MainPageObject(AppiumDriver driver)
-    {
+    public MainPageObject(AppiumDriver driver) {
         this.driver = driver;
     }
 
     /**
      * Найти элемент (с явным ожиданием)
-     * @param locator – локатор
+     * @param locator_with_type – строка, локатор с типом, например: "id:some_id"
      * @param error_message – сообщение об ошибке
      * @param timeOutInSeconds – время ожидания в секундах
      * @return найденный элемент
      */
-    public WebElement waitForElementPresent(By locator, String error_message, long timeOutInSeconds)
-    {
+    public WebElement waitForElementPresent(String locator_with_type, String error_message, long timeOutInSeconds) {
+        By locator = getLocatorByString(locator_with_type);
+
         WebDriverWait wait = new WebDriverWait(driver, timeOutInSeconds);
         wait.withMessage("\n" + error_message + "\n");
         return wait.until(ExpectedConditions.presenceOfElementLocated(locator));
@@ -39,12 +40,13 @@ public class MainPageObject {
 
     /**
      * Проверить, что элемента нет на экране
-     * @param locator – локатор
+     * @param locator_with_type – локатор
      * @param error_message – сообщение об ошибке
      * @param timeoutInSeconds – время ожидания элемента в секундах
      */
-    public void waitForElementNotPresent(By locator, String error_message, long timeoutInSeconds)
-    {
+    public void waitForElementNotPresent(String locator_with_type, String error_message, long timeoutInSeconds) {
+        By locator = getLocatorByString(locator_with_type);
+
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(error_message + "\n");
         wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
@@ -52,54 +54,52 @@ public class MainPageObject {
 
     /**
      * Подождать появления элемента и тапнуть его
-     * @param locator          – локатор
+     * @param locator_with_type          – локатор
      * @param error_message    – сообщение об ошибке
      * @param timeOutInSeconds – время ожидания в секундах
      * @return найденный элемент
      */
-    public WebElement waitForElementAndClick(By locator, String error_message, long timeOutInSeconds)
-    {
-        WebElement element = waitForElementPresent(locator, error_message, timeOutInSeconds);
+    public WebElement waitForElementAndClick(String locator_with_type, String error_message, long timeOutInSeconds) {
+        WebElement element = waitForElementPresent(locator_with_type, error_message, timeOutInSeconds);
         element.click();
         return element;
     }
 
     /**
      * Подождать появления элемента и отправить ему значение
-     * @param locator          – локатор
+     * @param locator_with_type          – локатор
      * @param value            – отправляемое значение
      * @param error_message    – сообщение об ошибке
      * @param timeOutInSeconds – время ожидания в секундах
      * @return элемент
      */
-    public WebElement waitForElementAndSendKeys(By locator, String value, String error_message, long timeOutInSeconds)
-    {
-        WebElement element = waitForElementPresent(locator, error_message, timeOutInSeconds);
+    public WebElement waitForElementAndSendKeys(String locator_with_type, String value, String error_message, long timeOutInSeconds) {
+        WebElement element = waitForElementPresent(locator_with_type, error_message, timeOutInSeconds);
         element.sendKeys(value);
         return element;
     }
 
     /**
      * Подождать появления элемента и получить значение его атрибута
-     * @param locator – локатор
+     * @param locator_with_type – локатор
      * @param attribute – название атрибута
      * @param error_message – сообщение об ошибке
      * @param timeOutInSeconds – время ожидания элемента в секундах
      * @return значение атрибута
      */
-    public String waitForElementAndGetAttribute(By locator, String attribute, String error_message, long timeOutInSeconds)
-    {
-        WebElement element = waitForElementPresent(locator, error_message, timeOutInSeconds);
+    public String waitForElementAndGetAttribute(String locator_with_type, String attribute, String error_message, long timeOutInSeconds) {
+        WebElement element = waitForElementPresent(locator_with_type, error_message, timeOutInSeconds);
         return element.getAttribute(attribute);
     }
 
     /**
      * Получить количество элементов, найденных по локатору
-     * @param locator – локатор
+     * @param locator_with_type – локатор
      * @return размер списка с найденными элементами
      */
-    public int getNumberOfElements(By locator)
-    {
+    public int getNumberOfElements(String locator_with_type) {
+        By locator = getLocatorByString(locator_with_type);
+
         List elements = driver.findElements(locator);
         return elements.size();
     }
@@ -109,8 +109,7 @@ public class MainPageObject {
      *
      * @param timeOfScroll – время ожидания скролла в миллисекундах
      */
-    public void scrollUp(int timeOfScroll)
-    {
+    public void scrollUp(int timeOfScroll) {
         Dimension size = driver.manage().window().getSize();
         int center_x = size.width / 2;
         int start_y = (int) (size.height * 0.8);
@@ -150,12 +149,11 @@ public class MainPageObject {
 
     /**
      * Свайпнуть элемент влево
-     * @param locator – локатор элемента
+     * @param locator_with_type – локатор элемента
      * @param error_message – сообщение об ошибке
      */
-    public void swipeElementToLeft(By locator, String error_message)
-    {
-        WebElement element = waitForElementPresent(locator, error_message, 10);
+    public void swipeElementToLeft(String locator_with_type, String error_message) {
+        WebElement element = waitForElementPresent(locator_with_type, error_message, 10);
 
         // Крайние точки элемента по осям X и Y
         int left_x = element.getLocation().x;
@@ -189,28 +187,43 @@ public class MainPageObject {
     /**
      * Быстро проскроллить страницу снизу вверх
      */
-    public void scrollUpQuick()
-    {
+    public void scrollUpQuick() {
         scrollUp(150);
     }
 
     /**
      * Скроллить страницу, пока не найден элемент или достигнут максимум свайпов
      *
-     * @param locator       – локатор элемента
+     * @param locator_with_type       – локатор элемента
      * @param error_message – сообщение об ошибке
      * @param max_swipes    – максимальное количество свайпов, после которого поиск остановится
      */
-    public void scrollUpToFindElement(By locator, String error_message, int max_swipes)
-    {
+    public void scrollUpToFindElement(String locator_with_type, String error_message, int max_swipes) {
+        By locator = getLocatorByString(locator_with_type);
+
         int swipes = 0;
 
         while (driver.findElements(locator).isEmpty()) {
             if (swipes >= max_swipes) {
-                waitForElementPresent(locator, error_message, 0);
+                waitForElementPresent(locator_with_type, error_message, 0);
             }
             scrollUpQuick();
             ++swipes;
         }
+    }
+
+    /**
+     * Получить локатор из строки
+     * @param locator_with_type – строка, локатор + его тип
+     * @return – элемент By
+     */
+    protected By getLocatorByString(String locator_with_type) {
+        String[] exploited_locator = locator_with_type.split(Pattern.quote(":"), 2);
+        String type = exploited_locator[0];
+        String locator = exploited_locator[1];
+
+        if (type.equals("xpath")) return By.xpath(locator);
+        else if (type.equals("id")) return By.id(locator);
+        else throw new IllegalArgumentException("Unable to get the type of the locator: " + locator);
     }
 }

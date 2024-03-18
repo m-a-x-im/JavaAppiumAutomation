@@ -23,8 +23,8 @@ public class CoreTestCase extends TestCase {
     private static final String AppiumURL = "http://127.0.0.1:4723/";
 
     @Override
-    protected void setUp() throws Exception {
-
+    protected void setUp() throws Exception
+    {
         super.setUp();
 
         DesiredCapabilities capabilities = this.setCapabilitiesByPlatformEnv();
@@ -35,8 +35,8 @@ public class CoreTestCase extends TestCase {
     }
 
     @Override
-    protected void tearDown() throws Exception {
-
+    protected void tearDown() throws Exception
+    {
         driver.rotate(ScreenOrientation.PORTRAIT);
         driver.quit();
 
@@ -72,8 +72,8 @@ public class CoreTestCase extends TestCase {
      * Установить capabilities в зависимости от платформы
      * @return capabilities
      */
-    private DesiredCapabilities setCapabilitiesByPlatformEnv() throws Exception {
-
+    private DesiredCapabilities setCapabilitiesByPlatformEnv() throws Exception
+    {
         String platform = System.getenv("PLATFORM");
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
@@ -105,8 +105,8 @@ public class CoreTestCase extends TestCase {
      * @param capabilities – capabilities для платформы
      * @return AndroidDriver или IOSDriver
      */
-    private AppiumDriver getDriverByPlatformEnv(URL remoteAddress, Capabilities capabilities) throws Exception {
-
+    private AppiumDriver getDriverByPlatformEnv(URL remoteAddress, Capabilities capabilities) throws Exception
+    {
         String platform = System.getenv("PLATFORM");
         AppiumDriver driver;
 
