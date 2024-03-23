@@ -16,13 +16,23 @@ public class Platform {
             IOS_APP_PATH = "/Users/maxim/git/m-a-x-im/OldJavaAppiumAutomation/apk_files/Wikipedia693.app";
 
 
+    /* Приватный конструктор синглтона */
+    private static Platform instance;
+    private Platform() {};
+
+    public static Platform getInstance() {
+        if (instance == null)
+            instance = new Platform();
+        return instance;
+    }
+    /* */
+
     /**
      * Получить драйвер в зависимости от платформы
      * @return драйвер
      * @throws Exception тип драйвера для платформы не определён
      */
-    public AppiumDriver getDriver() throws Exception
-    {
+    public AppiumDriver getDriver() throws Exception {
         URL url = new URL(APPIUM_URL);
 
         if (this.isAndroid()) {

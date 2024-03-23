@@ -3,6 +3,7 @@ package tests;
 import lib.CoreTestCase;
 import lib.ui.ArticlePageObject;
 import lib.ui.SearchPageObject;
+import lib.ui.factories.SearchPageObjectFactory;
 
 public class ArticleTests extends CoreTestCase {
 
@@ -19,9 +20,8 @@ public class ArticleTests extends CoreTestCase {
      * 4. Найти текст этого подзаголовка на странице.
      * 5. Проверить, что текст совпадает с подзаголовком из результатов поиска.
      */
-    public void testCompareArticleDescription()
-    {
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+    public void testCompareArticleDescription() {
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         ArticlePageObject articlePageObject = new ArticlePageObject(driver);
 
         searchPageObject.initSearchInput();
@@ -44,13 +44,12 @@ public class ArticleTests extends CoreTestCase {
      * 4. Подождать появления подзаголовка.
      * 5. Проскроллить страницу до футера.
      */
-    public void testScrollArticle()
-    {
+    public void testScrollArticle() {
         String
                 query = "System of a Down",
                 article_subtitle = "American metal band";
 
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         ArticlePageObject articlePageObject = new ArticlePageObject(driver);
 
         searchPageObject.initSearchInput();
@@ -66,9 +65,8 @@ public class ArticleTests extends CoreTestCase {
      * 3. Выбрать (открыть) статью из результатов поиска.
      * 4. Найти заголовок и проверить, соответствует ли он ожиданиям.
      */
-    public void testArticleTitle()
-    {
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+    public void testArticleTitle() {
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         ArticlePageObject articlePageObject = new ArticlePageObject(driver);
 
         searchPageObject.initSearchInput();

@@ -2,6 +2,7 @@ package tests;
 
 import lib.CoreTestCase;
 import lib.ui.WelcomePageObject;
+import lib.ui.factories.WelcomePageObjectFactory;
 
 public class GetStartedTest extends CoreTestCase {
 
@@ -15,21 +16,20 @@ public class GetStartedTest extends CoreTestCase {
      * 7. Дождаться появления ссылки "Learn more about data collected".
      * 8. Нажать кнопку Get started.
      */
-    public void testPassThroughWelcomeIOS() {
-        if (this.platform.isAndroid()) return;
+    public void testPassThroughWelcome() {
 
-        WelcomePageObject welcomePageObject = new WelcomePageObject(driver);
+        WelcomePageObject welcomePageObject = WelcomePageObjectFactory.get(driver);
 
-        welcomePageObject.waitForLearnMoreWikipediaLink();
+        welcomePageObject.waitForFirstPageLink();
         welcomePageObject.clickNextButton();
 
-        welcomePageObject.waitForNewWaysToExploreTitle();
+        welcomePageObject.waitForSecondPageTitle();
         welcomePageObject.clickNextButton();
 
-        welcomePageObject.waitAddOrEditLanguagesLink();
+        welcomePageObject.waitForThirdPageLink();
         welcomePageObject.clickNextButton();
 
-        welcomePageObject.waitForLearnMoreDataCollectedLink();
-        welcomePageObject.clickGetStartedButton();
+        welcomePageObject.waitForFourthPageLink();
+        welcomePageObject.clickGetStartedOrAcceptButton();
     }
 }

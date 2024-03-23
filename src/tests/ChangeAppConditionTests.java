@@ -3,6 +3,7 @@ package tests;
 import lib.CoreTestCase;
 import lib.ui.ArticlePageObject;
 import lib.ui.SearchPageObject;
+import lib.ui.factories.SearchPageObjectFactory;
 
 public class ChangeAppConditionTests extends CoreTestCase {
 
@@ -21,13 +22,12 @@ public class ChangeAppConditionTests extends CoreTestCase {
      * 7. Развернуть экран в portrait.
      * 8. Снова сравнить заголовок с первоначальным.
      */
-    public void testArticleTitleAfterRotation()
-    {
+    public void testArticleTitleAfterRotation() {
         String
                 query = "System of a Down",
                 article_description = "American metal band";
 
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         ArticlePageObject articlePageObject = new ArticlePageObject(driver);
 
         searchPageObject.initSearchInput();
@@ -60,9 +60,8 @@ public class ChangeAppConditionTests extends CoreTestCase {
      * 4. Свернуть МП на 2 секунды.
      * 5. Проверить, что в результатах поиска по-прежнему отображается та же статья.
      */
-    public void testArticleInBackground()
-    {
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+    public void testArticleInBackground() {
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
 
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(DEFAULT_QUERY);

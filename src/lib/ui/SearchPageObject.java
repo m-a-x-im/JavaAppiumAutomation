@@ -14,11 +14,11 @@ abstract public class SearchPageObject extends MainPageObject {
         super(driver);
     }
 
-
     protected static String
-            SKIP_ONBOARDING,
+            SKIP_WELCOME,
             SEARCH_INIT_ELEMENT,
             SEARCH_INPUT,
+            SEARCH_INPUT_TEXT_ATTRIBUTE,
             SEARCH_CANCEL,
             SEARCH_RESULTS_LIST,
             SEARCH_RESULT_WITH_DESCRIPTION_TEMPLATE,
@@ -62,8 +62,8 @@ abstract public class SearchPageObject extends MainPageObject {
      */
     public void initSearchInput() {
         this.waitForElementAndClick(
-                SKIP_ONBOARDING,
-                "The Skip Button cannot be found using '" + SKIP_ONBOARDING + "'",
+                SKIP_WELCOME,
+                "The Skip Button cannot be found using '" + SKIP_WELCOME + "'",
                 5
         );
 
@@ -197,13 +197,14 @@ abstract public class SearchPageObject extends MainPageObject {
     }
 
     /**
-     * Получить плейсхолдер строки поиска
+     * Получить текст из строки поиска
+     * @return String, введённый текст или плейсхолдер
      */
-    public String getSearchBarPlaceholder() {
+    public String getSearchBarText() {
         return
                 this.waitForElementAndGetAttribute(
                         SEARCH_INPUT,
-                "text",
+                SEARCH_INPUT_TEXT_ATTRIBUTE,
                 "The Search Bar cannot be found using '" + SEARCH_INPUT + "'",
                 5
         );

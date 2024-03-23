@@ -9,9 +9,10 @@ public class IOSSearchPageObject extends SearchPageObject {
     }
 
     static {
-        SKIP_ONBOARDING = "xpath://XCUIElementTypeButton[@name='Skip']";
+        SKIP_WELCOME = "xpath://XCUIElementTypeButton[@name='Skip']";
         SEARCH_INIT_ELEMENT = "xpath://XCUIElementTypeSearchField[@name='Search Wikipedia']";
         SEARCH_INPUT = "xpath://XCUIElementTypeSearchField[@label='Search Wikipedia']";
+        SEARCH_INPUT_TEXT_ATTRIBUTE = "value";
         SEARCH_CANCEL = "xpath://XCUIElementTypeStaticText[@name='Cancel']";
         SEARCH_RESULTS_LIST = "xpath://XCUIElementTypeCollectionView[@visible='true']";
         SEARCH_RESULT_WITH_DESCRIPTION_TEMPLATE = "xpath://XCUIElementTypeStaticText[contains(@name, '{DESCRIPTION}')]";

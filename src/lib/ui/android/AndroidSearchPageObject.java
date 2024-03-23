@@ -10,9 +10,10 @@ public class AndroidSearchPageObject extends SearchPageObject {
     }
 
     static {
-        SKIP_ONBOARDING = "id:org.wikipedia:id/fragment_onboarding_skip_button";
+        SKIP_WELCOME = "id:org.wikipedia:id/fragment_onboarding_skip_button";
         SEARCH_INIT_ELEMENT = "id:org.wikipedia:id/search_container";
         SEARCH_INPUT = "id:org.wikipedia:id/search_src_text";
+        SEARCH_INPUT_TEXT_ATTRIBUTE = "text";
         SEARCH_CANCEL = "id:org.wikipedia:id/search_close_btn";
         SEARCH_RESULTS_LIST = "id:org.wikipedia:id/search_results_list";
         SEARCH_RESULT_WITH_DESCRIPTION_TEMPLATE = "xpath://*" +

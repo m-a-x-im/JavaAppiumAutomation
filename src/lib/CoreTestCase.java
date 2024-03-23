@@ -11,13 +11,11 @@ import java.time.Duration;
 public class CoreTestCase extends TestCase {
 
     protected AppiumDriver driver;
-    protected Platform platform;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        platform = new Platform();
-        driver = platform.getDriver();
+        driver = Platform.getInstance().getDriver();
         this.rotateScreenPortrait();
     }
 

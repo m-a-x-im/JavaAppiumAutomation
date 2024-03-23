@@ -5,6 +5,7 @@ import lib.ui.ArticlePageObject;
 import lib.ui.NavigationUI;
 import lib.ui.SavedListsPageObject;
 import lib.ui.SearchPageObject;
+import lib.ui.factories.SearchPageObjectFactory;
 
 public class SavedListTests extends CoreTestCase {
 
@@ -25,11 +26,10 @@ public class SavedListTests extends CoreTestCase {
      * 7. Перейти в созданный список.
      * 8. Свайпом удалить добавленную строку из списка и проверить, что она исчезла.
      */
-    public void testAddArticleToSaved()
-    {
+    public void testAddArticleToSaved() {
         String list_name = "Languages";
 
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         ArticlePageObject articlePageObject = new ArticlePageObject(driver);
         NavigationUI navigationUI = new NavigationUI(driver);
         SavedListsPageObject savedListsPageObject = new SavedListsPageObject(driver);
@@ -46,7 +46,6 @@ public class SavedListTests extends CoreTestCase {
 
         savedListsPageObject.openSavedListByName(list_name);
         savedListsPageObject.swipeArticleToDelete(DEFAULT_ARTICLE_TITLE);
-
     }
 
     /**
@@ -60,13 +59,12 @@ public class SavedListTests extends CoreTestCase {
      * 8. Проверить, что вторая статья всё ещё в списке.
      * 9. Открыть вторую статью и проверить заголовок.
      */
-    public void testSaveTwoArticles()
-    {
+    public void testSaveTwoArticles() {
         String
                 second_query = "Appium",
                 second_article_description = "Automation for Apps";
 
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         ArticlePageObject articlePageObject = new ArticlePageObject(driver);
         NavigationUI navigationUI = new NavigationUI(driver);
         SavedListsPageObject savedListsPageObject = new SavedListsPageObject(driver);
