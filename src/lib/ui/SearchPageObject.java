@@ -14,11 +14,9 @@ abstract public class SearchPageObject extends MainPageObject {
         super(driver);
     }
 
-    protected static String
-            SKIP_WELCOME,
+    protected static String SKIP_WELCOME,
             SEARCH_INIT_ELEMENT,
             SEARCH_INPUT,
-            SEARCH_INPUT_TEXT_ATTRIBUTE,
             SEARCH_CANCEL,
             SEARCH_RESULTS_LIST,
             SEARCH_RESULT_WITH_DESCRIPTION_TEMPLATE,

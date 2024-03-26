@@ -17,8 +17,17 @@ abstract public class ArticlePageObject extends MainPageObject {
     }
 
 
-    protected static String ARTICLE_TITLE, ARTICLE_SUBTITLE, HEADER, FOOTER, SAVE_BUTTON, SNACKBAR_BUTTON,
-            CREATE_LIST_BUTTON_IOS, LIST_NAME_INPUT, OK_BUTTON, LIST_TO_SAVE_ARTICLE_TEMPLATE;
+    protected static String
+            ARTICLE_TITLE,
+            ARTICLE_SUBTITLE,
+            HEADER,
+            FOOTER,
+            SAVE_BUTTON,
+            SNACKBAR_BUTTON,
+            CREATE_LIST_BUTTON_IOS,
+            LIST_NAME_INPUT,
+            OK_BUTTON,
+            LIST_TO_SAVE_ARTICLE_TEMPLATE;
 
 
     /* TEMPLATE METHODS */
@@ -65,7 +74,7 @@ abstract public class ArticlePageObject extends MainPageObject {
      */
     public String getArticleTitleText() {
         WebElement title_element = waitTitleOfArticle();
-        return title_element.getAttribute("text");
+        return title_element.getAttribute(SEARCH_INPUT_TEXT_ATTRIBUTE);
     }
 
     /**

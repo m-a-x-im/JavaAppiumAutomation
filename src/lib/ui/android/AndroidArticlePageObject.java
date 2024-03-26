@@ -20,6 +20,7 @@ public class AndroidArticlePageObject extends ArticlePageObject {
         LIST_NAME_INPUT = "id:org.wikipedia:id/text_input";
         OK_BUTTON = "xpath://*[@text='OK']";
         LIST_TO_SAVE_ARTICLE_TEMPLATE = "xpath://*[@resource-id='org.wikipedia:id/item_title'][@text='{LIST_NAME}']";
+        SEARCH_INPUT_TEXT_ATTRIBUTE = "text";
     }
 
     public AndroidArticlePageObject(AppiumDriver driver) {

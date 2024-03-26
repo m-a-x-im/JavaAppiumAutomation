@@ -16,6 +16,7 @@ public class iOSArticlePageObject extends ArticlePageObject {
         LIST_NAME_INPUT = "xpath://XCUIElementTypeTextField[@value='reading list title']";
         OK_BUTTON = "xpath://XCUIElementTypeButton[@name='Create reading list']";
         LIST_TO_SAVE_ARTICLE_TEMPLATE = "xpath://XCUIElementTypeStaticText[@name='{LIST_NAME}']";
+        SEARCH_INPUT_TEXT_ATTRIBUTE = "name";
     }
 
     public iOSArticlePageObject(AppiumDriver driver) {

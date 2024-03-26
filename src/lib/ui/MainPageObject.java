@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 
 public class MainPageObject {
 
+    protected static String SEARCH_INPUT_TEXT_ATTRIBUTE;
     protected AppiumDriver driver;
 
     public MainPageObject(AppiumDriver driver) {
