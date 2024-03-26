@@ -1,6 +1,8 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
+import lib.Platform;
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
@@ -67,10 +69,10 @@ public class MainPageObject {
 
     /**
      * Подождать появления элемента и отправить ему значение
-     * @param locator_with_type          – локатор
-     * @param value            – отправляемое значение
-     * @param error_message    – сообщение об ошибке
-     * @param timeOutInSeconds – время ожидания в секундах
+     * @param locator_with_type локатор
+     * @param value отправляемое значение
+     * @param error_message сообщение об ошибке
+     * @param timeOutInSeconds время ожидания в секундах
      * @return элемент
      */
     public WebElement waitForElementAndSendKeys(String locator_with_type, String value, String error_message, long timeOutInSeconds) {
@@ -94,7 +96,7 @@ public class MainPageObject {
 
     /**
      * Получить количество элементов, найденных по локатору
-     * @param locator_with_type – локатор
+     * @param locator_with_type локатор
      * @return размер списка с найденными элементами
      */
     public int getNumberOfElements(String locator_with_type) {
@@ -107,7 +109,7 @@ public class MainPageObject {
     /**
      * Проскроллить страницу снизу вверх по центру экрана
      *
-     * @param timeOfScroll – время ожидания скролла в миллисекундах
+     * @param timeOfScroll время скролла в миллисекундах
      */
     public void scrollUp(int timeOfScroll) {
         Dimension size = driver.manage().window().getSize();
@@ -149,8 +151,8 @@ public class MainPageObject {
 
     /**
      * Свайпнуть элемент влево
-     * @param locator_with_type – локатор элемента
-     * @param error_message – сообщение об ошибке
+     * @param locator_with_type локатор элемента
+     * @param error_message сообщение об ошибке
      */
     public void swipeElementToLeft(String locator_with_type, String error_message) {
         WebElement element = waitForElementPresent(locator_with_type, error_message, 10);
@@ -192,11 +194,11 @@ public class MainPageObject {
     }
 
     /**
-     * Скроллить страницу, пока не найден элемент или достигнут максимум свайпов
+     * Скроллить страницу, пока не найден элемент или достигнут максимум свайпов (Android)
      *
-     * @param locator_with_type       – локатор элемента
-     * @param error_message – сообщение об ошибке
-     * @param max_swipes    – максимальное количество свайпов, после которого поиск остановится
+     * @param locator_with_type локатор элемента
+     * @param error_message сообщение об ошибке
+     * @param max_swipes максимальное количество свайпов, после которого скролл прекратится
      */
     public void scrollUpToFindElement(String locator_with_type, String error_message, int max_swipes) {
         By locator = getLocatorByString(locator_with_type);
@@ -210,6 +212,44 @@ public class MainPageObject {
             scrollUpQuick();
             ++swipes;
         }
+    }
+
+    /**
+     * Скроллить экран, пока не появится элемент или достигнут максимум свайпов (iOS)
+     * @param locator локатор элемента
+     * @param error_message сообщение об ошибке
+     * @param max_swipes максимальное количество свайпов, после которого скролл прекратится
+     */
+    public void scrollUpUntilTheElementAppears(String locator, String error_message, int max_swipes) {
+
+        int swipes = 0;
+        while (!this.isElementLocatedOnTheScreen(locator)) {
+            if (swipes >= max_swipes) {
+                Assert.assertTrue(error_message, this.isElementLocatedOnTheScreen(locator));
+            }
+            scrollUp(3000);
+            ++swipes;
+        }
+    }
+
+    /**
+     * Виден ли элемент на экране
+     * @param locator локатор элемента
+     * @return boolean
+     */
+    public boolean isElementLocatedOnTheScreen(String locator) {
+
+        // Расположение элемента по высоте
+        int element_location_by_y = this.waitForElementPresent(
+                locator,
+                "The Element cannot be found using '" + locator + "'",
+                5
+        ).getLocation().getY();
+
+        // Высота экрана
+        int screen_size_by_y = driver.manage().window().getSize().getHeight();
+
+        return element_location_by_y < screen_size_by_y;
     }
 
     /**

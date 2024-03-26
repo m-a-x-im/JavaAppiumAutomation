@@ -5,6 +5,7 @@ import lib.ui.ArticlePageObject;
 import lib.ui.NavigationUI;
 import lib.ui.SavedListsPageObject;
 import lib.ui.SearchPageObject;
+import lib.ui.factories.ArticlePageObjectFactory;
 import lib.ui.factories.SearchPageObjectFactory;
 
 public class SavedListTests extends CoreTestCase {
@@ -30,7 +31,7 @@ public class SavedListTests extends CoreTestCase {
         String list_name = "Languages";
 
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
-        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
         NavigationUI navigationUI = new NavigationUI(driver);
         SavedListsPageObject savedListsPageObject = new SavedListsPageObject(driver);
 
@@ -39,6 +40,7 @@ public class SavedListTests extends CoreTestCase {
         searchPageObject.openArticleWithDescription(DEFAULT_ARTICLE_DESCRIPTION);
 
         articlePageObject.initSavingArticle();
+        articlePageObject.clickCreateNewListIOS();
         articlePageObject.saveArticleToNewList(list_name);
 
         for (int i = 0; i < 2; i++) navigationUI.clickBackArrow();
@@ -65,7 +67,7 @@ public class SavedListTests extends CoreTestCase {
                 second_article_description = "Automation for Apps";
 
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
-        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
         NavigationUI navigationUI = new NavigationUI(driver);
         SavedListsPageObject savedListsPageObject = new SavedListsPageObject(driver);
 
@@ -74,6 +76,7 @@ public class SavedListTests extends CoreTestCase {
         searchPageObject.typeSearchLine(DEFAULT_QUERY);
         searchPageObject.openArticleWithDescription(DEFAULT_ARTICLE_DESCRIPTION);
         articlePageObject.initSavingArticle();
+        articlePageObject.clickCreateNewListIOS();
         articlePageObject.saveArticleToNewList(DEFAULT_LIST_NAME);
 
         // Сохранение второй статьи в тот же список

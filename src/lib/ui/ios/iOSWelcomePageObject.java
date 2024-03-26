@@ -3,9 +3,9 @@ package lib.ui.ios;
 import io.appium.java_client.AppiumDriver;
 import lib.ui.WelcomePageObject;
 
-public class IOSWelcomePageObject extends WelcomePageObject {
+public class iOSWelcomePageObject extends WelcomePageObject {
 
-    public IOSWelcomePageObject(AppiumDriver driver) {
+    public iOSWelcomePageObject(AppiumDriver driver) {
         super(driver);
     }
 

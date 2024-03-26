@@ -3,8 +3,8 @@ package lib.ui.ios;
 import io.appium.java_client.AppiumDriver;
 import lib.ui.SearchPageObject;
 
-public class IOSSearchPageObject extends SearchPageObject {
-    public IOSSearchPageObject(AppiumDriver driver) {
+public class iOSSearchPageObject extends SearchPageObject {
+    public iOSSearchPageObject(AppiumDriver driver) {
         super(driver);
     }
 

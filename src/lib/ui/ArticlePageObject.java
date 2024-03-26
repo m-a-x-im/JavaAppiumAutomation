@@ -1,7 +1,7 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
-import org.openqa.selenium.By;
+import lib.Platform;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
@@ -9,7 +9,7 @@ import org.openqa.selenium.WebElement;
 /**
  * Методы работы со статьями
  */
-public class ArticlePageObject extends MainPageObject {
+abstract public class ArticlePageObject extends MainPageObject {
 
     public ArticlePageObject(AppiumDriver driver)
     {
@@ -17,27 +17,18 @@ public class ArticlePageObject extends MainPageObject {
     }
 
 
-    private static final String
-            ARTICLE_TITLE_XPATH = "xpath://*[@resource-id='org.wikipedia:id/page_contents_container']/android.webkit.WebView" +
-            "/android.webkit.WebView/android.view.View/android.view.View[1]/android.widget.TextView[1]",
-            ARTICLE_SUBTITLE_XPATH = "xpath://*[@resource-id='pcs-edit-section-title-description']",
-            FOOTER_XPATH = "xpath://android.view.View[@content-desc='View article in browser']",
-            SAVE_BUTTON_ID = "id:org.wikipedia:id/page_save",
-            SNACKBAR_BUTTON_ID = "id:org.wikipedia:id/snackbar_action",
-            LIST_NAME_INPUT_ID = "id:org.wikipedia:id/text_input",
-            OK_BUTTON_XPATH = "xpath://*[@text='OK']",
-            HEADER_ID = "id:org.wikipedia:id/page_header_view",
-            LIST_TO_SAVE_ARTICLE_XPATH_TEMPLATE = "xpath://*[@resource-id='org.wikipedia:id/item_title'][@text='{LIST_NAME}']";
+    protected static String ARTICLE_TITLE, ARTICLE_SUBTITLE, HEADER, FOOTER, SAVE_BUTTON, SNACKBAR_BUTTON,
+            CREATE_LIST_BUTTON_IOS, LIST_NAME_INPUT, OK_BUTTON, LIST_TO_SAVE_ARTICLE_TEMPLATE;
 
 
     /* TEMPLATE METHODS */
     /**
-     * Получить xpath списка в шторке (для добавления статьи в этот список)
+     * Получить xpath списка для добавления статьи в этот список
      * @param list_name – название списка
      * @return String, xpath
      */
     private static String getListToSaveArticleXpathByName(String list_name) {
-        return LIST_TO_SAVE_ARTICLE_XPATH_TEMPLATE.replace("{LIST_NAME}", list_name);
+        return LIST_TO_SAVE_ARTICLE_TEMPLATE.replace("{LIST_NAME}", list_name);
     }
     /* TEMPLATE METHODS */
 
@@ -49,8 +40,8 @@ public class ArticlePageObject extends MainPageObject {
     public WebElement waitTitleOfArticle() {
         return
                 this.waitForElementPresent(
-                        ARTICLE_TITLE_XPATH,
-                        "The Title of the Article cannot be found using '" + ARTICLE_TITLE_XPATH + "'",
+                        ARTICLE_TITLE,
+                        "The Title of the Article cannot be found using '" + ARTICLE_TITLE + "'",
                         10
                 );
     }
@@ -62,8 +53,8 @@ public class ArticlePageObject extends MainPageObject {
     public WebElement waitSubtitleOfArticle() {
         return
                 this.waitForElementPresent(
-                ARTICLE_SUBTITLE_XPATH,
-                "The Subtitle of the Article cannot be found using '" + ARTICLE_SUBTITLE_XPATH + "'",
+                        ARTICLE_SUBTITLE,
+                "The Subtitle of the Article cannot be found using '" + ARTICLE_SUBTITLE + "'",
                 10
         );
     }
@@ -90,11 +81,19 @@ public class ArticlePageObject extends MainPageObject {
      * Проскроллить страницу до конца – до появления футера
      */
     public void scrollToFooter() {
-        this.scrollUpToFindElement(
-                FOOTER_XPATH,
-                "The Footer cannot be found using '" + FOOTER_XPATH + "' with 20 swipes",
-                20
-        );
+
+        if (Platform.getInstance().isAndroid()) {
+            this.scrollUpToFindElement(
+                    FOOTER,
+                    "The Footer cannot be found using '" + FOOTER,
+                    40
+            );
+        } else {
+            this.scrollUpUntilTheElementAppears(
+                    FOOTER,
+                    "The Footer cannot be found using '" + FOOTER,
+                    40);
+        }
     }
 
     /**
@@ -102,15 +101,28 @@ public class ArticlePageObject extends MainPageObject {
      */
     public void initSavingArticle() {
         this.waitForElementAndClick(
-                SAVE_BUTTON_ID,
-                "The 'Save' Button cannot be found using '" + SAVE_BUTTON_ID + "'",
+                SAVE_BUTTON,
+                "The Save Button cannot be found using '" + SAVE_BUTTON + "'",
                 5
         );
 
         this.waitForElementAndClick(
-                SNACKBAR_BUTTON_ID,
-                "The 'Add to list' Snackbar Button cannot be found using '" + SNACKBAR_BUTTON_ID + "'",
+                SNACKBAR_BUTTON,
+                "The Snackbar Button cannot be found using '" + SNACKBAR_BUTTON + "'",
                 3
+        );
+    }
+
+    /**
+     * Тапнуть кнопку создания нового списка, если тест выполняется на iOS
+     */
+    public void clickCreateNewListIOS() {
+        if (Platform.getInstance().isAndroid()) return;
+
+        this.waitForElementAndClick(
+                CREATE_LIST_BUTTON_IOS,
+                "The Create_New_List Button cannot be found using '" + CREATE_LIST_BUTTON_IOS + "'",
+                5
         );
     }
 
@@ -120,15 +132,15 @@ public class ArticlePageObject extends MainPageObject {
      */
     public void saveArticleToNewList(String list_name) {
         this.waitForElementAndSendKeys(
-                LIST_NAME_INPUT_ID,
+                LIST_NAME_INPUT,
                 list_name,
-                "The Text Input Line cannot be found using '" + LIST_NAME_INPUT_ID + "'",
+                "The Text Input Line cannot be found using '" + LIST_NAME_INPUT + "'",
                 5
         );
 
         this.waitForElementAndClick(
-                OK_BUTTON_XPATH,
-                "Couldn't tap the OK button ('" + OK_BUTTON_XPATH + "')",
+                OK_BUTTON,
+                "Couldn't tap the OK button ('" + OK_BUTTON + "')",
                 5
         );
     }
@@ -138,6 +150,7 @@ public class ArticlePageObject extends MainPageObject {
      * @param list_name – имя статьи
      */
     public void saveArticleToExistingList(String list_name) {
+
         String list_to_save_xpath = getListToSaveArticleXpathByName(list_name);
 
         this.waitForElementAndClick(
@@ -152,16 +165,23 @@ public class ArticlePageObject extends MainPageObject {
      * @return String, заголовок статьи
      */
     public String getTitleIfExist() {
-        // Нужно закрыть всплывающую подсказку, чтобы появился заголовок
-        this.waitForElementAndClick(
-                HEADER_ID,
-                "The Header cannot be found using '" + HEADER_ID + "'",
-                2
-        );
+
+        clickHeaderToCloseHint();
 
         try { return getArticleTitleText(); }
         catch (NoSuchElementException e)  {
-            throw new AssertionError("The Title cannot be found using '" + ARTICLE_TITLE_XPATH + "'");
+            throw new AssertionError("The Title cannot be found using '" + ARTICLE_TITLE + "'");
         }
+    }
+
+    /**
+     * Тапнуть хедер, чтобы убрать фокус с хинта
+     */
+    public void clickHeaderToCloseHint() {
+        this.waitForElementAndClick(
+                HEADER,
+                "The Header cannot be found using '" + HEADER + "'",
+                5
+        );
     }
 }

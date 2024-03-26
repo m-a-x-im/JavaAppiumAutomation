@@ -3,6 +3,7 @@ package tests;
 import lib.CoreTestCase;
 import lib.ui.ArticlePageObject;
 import lib.ui.SearchPageObject;
+import lib.ui.factories.ArticlePageObjectFactory;
 import lib.ui.factories.SearchPageObjectFactory;
 
 public class ArticleTests extends CoreTestCase {
@@ -22,11 +23,12 @@ public class ArticleTests extends CoreTestCase {
      */
     public void testCompareArticleDescription() {
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
-        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
 
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(DEFAULT_QUERY);
         searchPageObject.openArticleWithDescription(DEFAULT_ARTICLE_DESCRIPTION);
+        articlePageObject.clickHeaderToCloseHint();
 
         String subtitle_text = articlePageObject.getArticleDescriptionText();
 
@@ -50,7 +52,7 @@ public class ArticleTests extends CoreTestCase {
                 article_subtitle = "American metal band";
 
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
-        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
 
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(query);
@@ -67,7 +69,7 @@ public class ArticleTests extends CoreTestCase {
      */
     public void testArticleTitle() {
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
-        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
 
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(DEFAULT_QUERY);
