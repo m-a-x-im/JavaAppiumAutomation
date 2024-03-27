@@ -2,11 +2,12 @@ package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
+import lib.Platform;
 
 /**
  * Методы работы со списками сохранённых статей
  */
-public class SavedListsPageObject extends MainPageObject {
+abstract public class SavedListsPageObject extends MainPageObject {
 
     public SavedListsPageObject(AppiumDriver driver)
     {
@@ -14,11 +15,11 @@ public class SavedListsPageObject extends MainPageObject {
     }
 
 
-    private static final String
-            SAVED_LIST_XPATH_TEMPLATE = "xpath://*[@resource-id='org.wikipedia:id/item_title'][@text='{LIST_NAME}']",
-            SAVED_ARTICLE_XPATH_TEMPLATE = "xpath://*[@resource-id='org.wikipedia:id/page_list_item_container']/" +
-                    "android.widget.TextView[@text='{ARTICLE_TITLE}']",
-            SNACKBAR_ACTION_ID = "id:org.wikipedia:id/snackbar_action";
+    protected static String
+            SAVED_LIST_TEMPLATE,
+            SAVED_ARTICLE_TEMPLATE,
+            SWIPE_ACTION_DELETE_BUTTON,
+            SNACKBAR_ACTION;
 
 
     /* TEMPLATE METHODS */
@@ -28,7 +29,7 @@ public class SavedListsPageObject extends MainPageObject {
      * @return xpath списка
      */
     private static String getSavedListXpathByName(String list_name) {
-        return SAVED_LIST_XPATH_TEMPLATE.replace("{LIST_NAME}", list_name);
+        return SAVED_LIST_TEMPLATE.replace("{LIST_NAME}", list_name);
     }
 
     /**
@@ -37,14 +38,13 @@ public class SavedListsPageObject extends MainPageObject {
      * @return xpath статьи
      */
     private static String getSavedArticleXpathByTitle(String article_title) {
-        return SAVED_ARTICLE_XPATH_TEMPLATE.replace("{ARTICLE_TITLE}", article_title);
+        return SAVED_ARTICLE_TEMPLATE.replace("{ARTICLE_TITLE}", article_title);
     }
     /* TEMPLATE METHODS */
 
-
     /**
      * Открыть список сохранённых статей
-     * @param list_name – название списка
+     * @param list_name название списка
      */
     public void openSavedListByName(String list_name) {
         String saved_list_xpath = getSavedListXpathByName(list_name);
@@ -57,10 +57,12 @@ public class SavedListsPageObject extends MainPageObject {
     }
 
     /**
-     * Подождать появления статьи
-     * @param article_title – заголовок статьи
+     * Подождать появления статьи и получить xpath её заголовка
+     * @param article_title заголовок статьи
+     * @return String, xpath заголовка
      */
-    public void waitForArticleToAppearByTitle(String article_title) {
+    public String waitForArticleToAppearByTitle(String article_title) {
+
         String saved_article_xpath = getSavedArticleXpathByTitle(article_title);
 
         this.waitForElementPresent(
@@ -68,11 +70,12 @@ public class SavedListsPageObject extends MainPageObject {
                 "The Article '" + article_title + "' cannot be found in the saved list using '" + saved_article_xpath + "'",
                 10
         );
+        return saved_article_xpath;
     }
 
     /**
      * Подождать, пока статья пропадёт из списка
-     * @param article_title – заголовок статьи
+     * @param article_title заголовок статьи
      */
     public void waitForArticleToDisappearByTitle(String article_title) {
         String saved_article_xpath = getSavedArticleXpathByTitle(article_title);
@@ -86,19 +89,31 @@ public class SavedListsPageObject extends MainPageObject {
 
     /**
      * Удалить статью свайпом и проверить, что она исчезла
-     * @param article_title – заголовок статьи
+     * @param article_title заголовок статьи
      */
     public void swipeArticleToDelete(String article_title) {
-        String saved_article_xpath = getSavedArticleXpathByTitle(article_title);
 
-        waitForArticleToAppearByTitle(article_title);
+        String saved_article_xpath = waitForArticleToAppearByTitle(article_title);
 
         this.swipeElementToLeft(
                 saved_article_xpath,
                 "Couldn't swipe element with text '" + article_title + "' to delete"
         );
 
+        if (Platform.getInstance().isIOS()) tapDeleteArticleButtonIOS();
+
         waitForArticleToDisappearByTitle(article_title);
+    }
+
+    /**
+     * Тапнуть кнопку удаления статьи на iOS
+     */
+    public void tapDeleteArticleButtonIOS() {
+        waitForElementAndClick(
+                SWIPE_ACTION_DELETE_BUTTON,
+                "The Swipe Action Delete Button cannot be found using '" + SWIPE_ACTION_DELETE_BUTTON + "'",
+                5
+        );
     }
 
     /**
@@ -106,7 +121,7 @@ public class SavedListsPageObject extends MainPageObject {
      */
     public void waitForSnackbarToDisappear() {
         this.waitForElementNotPresent(
-                SNACKBAR_ACTION_ID,
+                SNACKBAR_ACTION,
                 "The Snackbar with the Undo Button is still present on the screen",
                 5
         );

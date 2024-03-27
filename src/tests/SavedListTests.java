@@ -1,11 +1,14 @@
 package tests;
 
 import lib.CoreTestCase;
+import lib.Platform;
 import lib.ui.ArticlePageObject;
 import lib.ui.NavigationUI;
 import lib.ui.SavedListsPageObject;
 import lib.ui.SearchPageObject;
 import lib.ui.factories.ArticlePageObjectFactory;
+import lib.ui.factories.NavigationUIFactory;
+import lib.ui.factories.SavedListPageObjectFactory;
 import lib.ui.factories.SearchPageObjectFactory;
 
 public class SavedListTests extends CoreTestCase {
@@ -32,8 +35,8 @@ public class SavedListTests extends CoreTestCase {
 
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
-        NavigationUI navigationUI = new NavigationUI(driver);
-        SavedListsPageObject savedListsPageObject = new SavedListsPageObject(driver);
+        NavigationUI navigationUI = NavigationUIFactory.get(driver);
+        SavedListsPageObject savedListsPageObject = SavedListPageObjectFactory.get(driver);
 
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(DEFAULT_QUERY);
@@ -43,8 +46,14 @@ public class SavedListTests extends CoreTestCase {
         articlePageObject.clickCreateNewListIOS();
         articlePageObject.saveArticleToNewList(list_name);
 
-        for (int i = 0; i < 2; i++) navigationUI.clickBackArrow();
+        navigationUI.clickBackArrow();
+
+        if (Platform.getInstance().isAndroid()) navigationUI.clickBackArrow();
+        else searchPageObject.clickCancelSearchButton();
+
         navigationUI.openSavedListsView();
+        navigationUI.closeLogInDialogIOS();
+        navigationUI.openReadingListsTabIOS();
 
         savedListsPageObject.openSavedListByName(list_name);
         savedListsPageObject.swipeArticleToDelete(DEFAULT_ARTICLE_TITLE);
@@ -68,8 +77,8 @@ public class SavedListTests extends CoreTestCase {
 
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
-        NavigationUI navigationUI = new NavigationUI(driver);
-        SavedListsPageObject savedListsPageObject = new SavedListsPageObject(driver);
+        NavigationUI navigationUI = NavigationUIFactory.get(driver);
+        SavedListsPageObject savedListsPageObject = SavedListPageObjectFactory.get(driver);
 
         // Сохранение первой статьи в новый список
         searchPageObject.initSearchInput();
