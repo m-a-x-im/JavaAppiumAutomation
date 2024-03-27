@@ -28,9 +28,10 @@ public class MainPageObject {
 
     /**
      * Найти элемент (с явным ожиданием)
+     *
      * @param locator_with_type – строка, локатор с типом, например: "id:some_id"
-     * @param error_message – сообщение об ошибке
-     * @param timeOutInSeconds – время ожидания в секундах
+     * @param error_message     – сообщение об ошибке
+     * @param timeOutInSeconds  – время ожидания в секундах
      * @return найденный элемент
      */
     public WebElement waitForElementPresent(String locator_with_type, String error_message, long timeOutInSeconds) {
@@ -43,9 +44,10 @@ public class MainPageObject {
 
     /**
      * Проверить, что элемента нет на экране
+     *
      * @param locator_with_type – локатор
-     * @param error_message – сообщение об ошибке
-     * @param timeoutInSeconds – время ожидания элемента в секундах
+     * @param error_message     – сообщение об ошибке
+     * @param timeoutInSeconds  – время ожидания элемента в секундах
      */
     public void waitForElementNotPresent(String locator_with_type, String error_message, long timeoutInSeconds) {
         By locator = getLocatorByString(locator_with_type);
@@ -57,9 +59,10 @@ public class MainPageObject {
 
     /**
      * Подождать появления элемента и тапнуть его
-     * @param locator_with_type          – локатор
-     * @param error_message    – сообщение об ошибке
-     * @param timeOutInSeconds – время ожидания в секундах
+     *
+     * @param locator_with_type – локатор
+     * @param error_message     – сообщение об ошибке
+     * @param timeOutInSeconds  – время ожидания в секундах
      * @return найденный элемент
      */
     public WebElement waitForElementAndClick(String locator_with_type, String error_message, long timeOutInSeconds) {
@@ -70,10 +73,11 @@ public class MainPageObject {
 
     /**
      * Подождать появления элемента и отправить ему значение
+     *
      * @param locator_with_type локатор
-     * @param value отправляемое значение
-     * @param error_message сообщение об ошибке
-     * @param timeOutInSeconds время ожидания в секундах
+     * @param value             отправляемое значение
+     * @param error_message     сообщение об ошибке
+     * @param timeOutInSeconds  время ожидания в секундах
      * @return элемент
      */
     public WebElement waitForElementAndSendKeys(String locator_with_type, String value, String error_message, long timeOutInSeconds) {
@@ -84,10 +88,11 @@ public class MainPageObject {
 
     /**
      * Подождать появления элемента и получить значение его атрибута
+     *
      * @param locator_with_type – локатор
-     * @param attribute – название атрибута
-     * @param error_message – сообщение об ошибке
-     * @param timeOutInSeconds – время ожидания элемента в секундах
+     * @param attribute         – название атрибута
+     * @param error_message     – сообщение об ошибке
+     * @param timeOutInSeconds  – время ожидания элемента в секундах
      * @return значение атрибута
      */
     public String waitForElementAndGetAttribute(String locator_with_type, String attribute, String error_message, long timeOutInSeconds) {
@@ -97,6 +102,7 @@ public class MainPageObject {
 
     /**
      * Получить количество элементов, найденных по локатору
+     *
      * @param locator_with_type локатор
      * @return размер списка с найденными элементами
      */
@@ -152,8 +158,9 @@ public class MainPageObject {
 
     /**
      * Свайпнуть элемент влево
+     *
      * @param locator_with_type локатор элемента
-     * @param error_message сообщение об ошибке
+     * @param error_message     сообщение об ошибке
      */
     public void swipeElementToLeft(String locator_with_type, String error_message) {
         WebElement element = waitForElementPresent(locator_with_type, error_message, 10);
@@ -163,26 +170,44 @@ public class MainPageObject {
         int right_x = left_x + element.getSize().width;
         int upper_y = element.getLocation().y;
         int lower_y = upper_y + element.getSize().height;
-
         int middle_y = (upper_y + lower_y) / 2;
 
         PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger");
+
         Sequence actions = new Sequence(finger, 1);
-        actions
-                .addAction(finger.createPointerMove(
-                        Duration.ofSeconds(0),
-                        PointerInput.Origin.viewport(),
-                        right_x,
-                        middle_y)
-                )
-                .addAction(finger.createPointerDown(0))
-                .addAction(finger.createPointerMove(
-                        Duration.ofMillis(100),
-                        PointerInput.Origin.viewport(),
-                        left_x,
-                        middle_y)
-                )
-                .addAction(finger.createPointerUp(0));
+
+        // Стартовая позиция – точка (right_x, middle_y)
+        actions.addAction(finger.createPointerMove(
+                Duration.ofSeconds(0),
+                PointerInput.Origin.viewport(),
+                right_x,
+                middle_y)
+        );
+
+        // Опустить палец на экран
+        actions.addAction(finger.createPointerDown(0));
+
+        // Переместить палец к точке (left_x, middle_y) на Android
+        if (Platform.getInstance().isAndroid()) {
+            actions.addAction(finger.createPointerMove(
+                    Duration.ofMillis(100),
+                    PointerInput.Origin.viewport(),
+                    left_x,
+                    middle_y)
+            );
+        // Сдвинуть палец влево на всю ширину экрана на iOS
+        } else {
+            int offset_x = (-1 * element.getSize().width);
+            actions.addAction(finger.createPointerMove(
+                    Duration.ofMillis(100),
+                    PointerInput.Origin.viewport(),
+                    offset_x,
+                    0)
+            );
+        }
+
+        // Поднять палец
+        actions.addAction(finger.createPointerUp(0));
 
         driver.perform(Collections.singletonList(actions));
     }
@@ -198,8 +223,8 @@ public class MainPageObject {
      * Скроллить страницу, пока не найден элемент или достигнут максимум свайпов (Android)
      *
      * @param locator_with_type локатор элемента
-     * @param error_message сообщение об ошибке
-     * @param max_swipes максимальное количество свайпов, после которого скролл прекратится
+     * @param error_message     сообщение об ошибке
+     * @param max_swipes        максимальное количество свайпов, после которого скролл прекратится
      */
     public void scrollUpToFindElement(String locator_with_type, String error_message, int max_swipes) {
         By locator = getLocatorByString(locator_with_type);
@@ -217,9 +242,10 @@ public class MainPageObject {
 
     /**
      * Скроллить экран, пока не появится элемент или достигнут максимум свайпов (iOS)
-     * @param locator локатор элемента
+     *
+     * @param locator       локатор элемента
      * @param error_message сообщение об ошибке
-     * @param max_swipes максимальное количество свайпов, после которого скролл прекратится
+     * @param max_swipes    максимальное количество свайпов, после которого скролл прекратится
      */
     public void scrollUpUntilTheElementAppears(String locator, String error_message, int max_swipes) {
 
@@ -235,6 +261,7 @@ public class MainPageObject {
 
     /**
      * Виден ли элемент на экране
+     *
      * @param locator локатор элемента
      * @return boolean
      */
@@ -255,6 +282,7 @@ public class MainPageObject {
 
     /**
      * Получить локатор из строки
+     *
      * @param locator_with_type – строка, локатор + его тип
      * @return – элемент By
      */
