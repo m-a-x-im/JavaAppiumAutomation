@@ -4,6 +4,7 @@ import io.appium.java_client.AppiumDriver;
 import lib.ui.SearchPageObject;
 
 public class iOSSearchPageObject extends SearchPageObject {
+
     public iOSSearchPageObject(AppiumDriver driver) {
         super(driver);
     }
@@ -14,6 +15,7 @@ public class iOSSearchPageObject extends SearchPageObject {
         SEARCH_INPUT = "xpath://XCUIElementTypeSearchField[@label='Search Wikipedia']";
         SEARCH_INPUT_TEXT_ATTRIBUTE = "value";
         SEARCH_CANCEL = "xpath://XCUIElementTypeStaticText[@name='Cancel']";
+        LANG_BUTTON = "xpath://XCUIElementTypeButton[@name='Change language']";
         SEARCH_RESULTS_LIST = "xpath://XCUIElementTypeCollectionView[@visible='true']";
         SEARCH_RESULT_WITH_DESCRIPTION_TEMPLATE = "xpath://XCUIElementTypeStaticText[contains(@name, '{DESCRIPTION}')]";
         SEARCH_RESULT_WITH_TITLE_AND_DESCRIPTION_TEMPLATE = "xpath://" +

@@ -5,6 +5,10 @@ import lib.ui.ArticlePageObject;
 
 public class AndroidArticlePageObject extends ArticlePageObject {
 
+    public AndroidArticlePageObject(AppiumDriver driver) {
+        super(driver);
+    }
+
     static {
         ARTICLE_TITLE = "xpath://*" +
                 "[@resource-id='org.wikipedia:id/page_contents_container']/android.webkit.WebView/" +
@@ -21,9 +25,5 @@ public class AndroidArticlePageObject extends ArticlePageObject {
         OK_BUTTON = "xpath://*[@text='OK']";
         LIST_TO_SAVE_ARTICLE_TEMPLATE = "xpath://*[@resource-id='org.wikipedia:id/item_title'][@text='{LIST_NAME}']";
         SEARCH_INPUT_TEXT_ATTRIBUTE = "text";
-    }
-
-    public AndroidArticlePageObject(AppiumDriver driver) {
-        super(driver);
     }
 }

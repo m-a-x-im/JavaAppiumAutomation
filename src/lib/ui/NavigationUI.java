@@ -1,7 +1,6 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
-import org.openqa.selenium.By;
 
 /**
  * Методы навигации по приложению
@@ -13,19 +12,18 @@ public class NavigationUI extends MainPageObject {
         super(driver);
     }
 
-
-    private static final String
-            BACK_ARROW_XPATH = "xpath://android.widget.ImageButton[@content-desc='Navigate up']",
-            SAVED_TAB_ID = "id:org.wikipedia:id/nav_tab_reading_lists";
-
+    protected static String
+            BACK_ARROW,
+            SAVED_TAB,
+            CANCEL_BUTTON;
 
     /**
      * Тапнуть стрелку "назад"
      */
     public void clickBackArrow() {
         this.waitForElementAndClick(
-            BACK_ARROW_XPATH,
-            "The Back Arrow cannot be found using '" + BACK_ARROW_XPATH + "'",
+            BACK_ARROW,
+            "The Back Arrow cannot be found using '" + BACK_ARROW + "'",
             5
         );
     }
@@ -34,8 +32,8 @@ public class NavigationUI extends MainPageObject {
      * Открыть экран со списками сохранённых статей
      */
     public void openSavedListsView() {
-        this.waitForElementAndClick(SAVED_TAB_ID,
-            "The tab 'Saved' cannot be found using '" + SAVED_TAB_ID + "'",
+        this.waitForElementAndClick(SAVED_TAB,
+            "The tab 'Saved' cannot be found using '" + SAVED_TAB + "'",
             5
         );
     }

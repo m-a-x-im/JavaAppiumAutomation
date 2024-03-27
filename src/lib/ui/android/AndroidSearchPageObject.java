@@ -15,6 +15,7 @@ public class AndroidSearchPageObject extends SearchPageObject {
         SEARCH_INPUT = "id:org.wikipedia:id/search_src_text";
         SEARCH_INPUT_TEXT_ATTRIBUTE = "text";
         SEARCH_CANCEL = "id:org.wikipedia:id/search_close_btn";
+        LANG_BUTTON = "id:org.wikipedia:id/search_lang_button";
         SEARCH_RESULTS_LIST = "id:org.wikipedia:id/search_results_list";
         SEARCH_RESULT_WITH_DESCRIPTION_TEMPLATE = "xpath://*" +
                 "[@resource-id='org.wikipedia:id/page_list_item_description']" +

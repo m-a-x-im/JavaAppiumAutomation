@@ -5,6 +5,10 @@ import lib.ui.ArticlePageObject;
 
 public class iOSArticlePageObject extends ArticlePageObject {
 
+    public iOSArticlePageObject(AppiumDriver driver) {
+        super(driver);
+    }
+
     static {
         ARTICLE_TITLE = "xpath://XCUIElementTypeOther[@value='1']/XCUIElementTypeStaticText";
         ARTICLE_SUBTITLE = "xpath://XCUIElementTypeOther[@name='banner']/XCUIElementTypeOther[2]/XCUIElementTypeStaticText";
@@ -17,9 +21,5 @@ public class iOSArticlePageObject extends ArticlePageObject {
         OK_BUTTON = "xpath://XCUIElementTypeButton[@name='Create reading list']";
         LIST_TO_SAVE_ARTICLE_TEMPLATE = "xpath://XCUIElementTypeStaticText[@name='{LIST_NAME}']";
         SEARCH_INPUT_TEXT_ATTRIBUTE = "name";
-    }
-
-    public iOSArticlePageObject(AppiumDriver driver) {
-        super(driver);
     }
 }

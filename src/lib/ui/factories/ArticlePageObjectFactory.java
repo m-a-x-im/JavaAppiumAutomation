@@ -9,6 +9,7 @@ import lib.ui.ios.iOSArticlePageObject;
 public class ArticlePageObjectFactory {
 
     public static ArticlePageObject get(AppiumDriver driver) {
+
         if (Platform.getInstance().isAndroid()) {
             return new AndroidArticlePageObject(driver);
         } else {

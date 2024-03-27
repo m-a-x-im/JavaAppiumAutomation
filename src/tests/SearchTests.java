@@ -1,9 +1,9 @@
 package tests;
 
 import lib.CoreTestCase;
-import lib.ui.LanguagePageObject;
 import lib.ui.NavigationUI;
 import lib.ui.SearchPageObject;
+import lib.ui.factories.NavigationUIFactory;
 import lib.ui.factories.SearchPageObjectFactory;
 import org.openqa.selenium.WebElement;
 
@@ -56,9 +56,9 @@ public class SearchTests extends CoreTestCase {
      * 7. Проверить, что с экрана пропала кнопка смены языка из строки поиска.
      */
     public void testClearSearch() {
+
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
-        NavigationUI navigationUI = new NavigationUI(driver);
-        LanguagePageObject languagePageObject = new LanguagePageObject(driver);
+        NavigationUI navigationUI = NavigationUIFactory.get(driver);
 
         searchPageObject.initSearchInput();
         String search_bar_placeholder = searchPageObject.getSearchBarText();
@@ -80,7 +80,7 @@ public class SearchTests extends CoreTestCase {
                 search_bar_text);
 
         navigationUI.clickBackArrow();
-        languagePageObject.waitToLangButtonToDisappear();
+        searchPageObject.waitToLangButtonToDisappear();
     }
 
     /**
@@ -88,6 +88,7 @@ public class SearchTests extends CoreTestCase {
      * 2. Проверить, что в ней есть плейсхолдер "Search Wikipedia".
      */
     public void testSearchBarPlaceholder() {
+
         String placeholder = "Search Wikipedia";
 
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
@@ -111,6 +112,7 @@ public class SearchTests extends CoreTestCase {
      * 7. Проверить, что результаты поиска пусты.
      */
     public void testSearchAndCancel() {
+
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(DEFAULT_QUERY);
@@ -190,6 +192,7 @@ public class SearchTests extends CoreTestCase {
      * 4. Проверить, что список с результатами пустой.
      */
     public void testEmptySearchResultsList() {
+
         String query = "zxcvbnmasdfghjk";
 
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
@@ -208,6 +211,7 @@ public class SearchTests extends CoreTestCase {
      * 3. Проверить, что 3 результата содержат ожидаемый заголовок и описание.
      */
     public void testSearchByTitleAndDescription() {
+
         String query = "Jav", title = "Java";
         String[] descriptions = {
                 "Object-oriented programming language",

@@ -18,6 +18,7 @@ abstract public class SearchPageObject extends MainPageObject {
             SEARCH_INIT_ELEMENT,
             SEARCH_INPUT,
             SEARCH_CANCEL,
+            LANG_BUTTON,
             SEARCH_RESULTS_LIST,
             SEARCH_RESULT_WITH_DESCRIPTION_TEMPLATE,
             SEARCH_RESULT_WITH_TITLE_AND_DESCRIPTION_TEMPLATE,
@@ -238,6 +239,28 @@ abstract public class SearchPageObject extends MainPageObject {
                 search_result_xpath,
                 "The Article with title '" + title + "' and description '" + description + "' cannot be " +
                         "found using '" + search_result_xpath + "'",
+                5
+        );
+    }
+
+    /**
+     * Подождать появления кнопки смены языка
+     */
+    public void waitForLangButtonToAppear() {
+        this.waitForElementPresent(
+                LANG_BUTTON,
+                "The Lang Button cannot be found using '" + LANG_BUTTON + "'",
+                5
+        );
+    }
+
+    /**
+     * Подождать исчезновения кнопки смены языка
+     */
+    public void waitToLangButtonToDisappear() {
+        this.waitForElementNotPresent(
+                LANG_BUTTON,
+                "The Lang Button is still present on the screen",
                 5
         );
     }
